@@ -1,0 +1,21 @@
+---
+title: "Old Faithful, Forest, Groomed Forest"
+description: |
+  A short description of the post.
+author:
+  - name: Akhila Nekkanti, Shaina Trevino, Jonathan Pedroza
+    url: https://github.com/akhilanekkanti1/Final_ML_Blog
+date: 11-30-2020
+output:
+  distill::distill_article:
+    self_contained: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+Distill is a publication format for scientific and technical writing, native to the web.
+
+Learn more about using Distill at <https://rstudio.github.io/distill>.
+
