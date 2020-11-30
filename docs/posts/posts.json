@@ -1,21 +1,5 @@
 [
   {
-    "path": "posts/welcome/",
-    "title": "Models! Models! Models!",
-    "description": "Welcome to our Machine Learning blog.",
-    "author": [
-      {
-        "name": "Akhila Nekkanti, Shaina Trevino, Jonathan Pedroza",
-        "url": "https://github.com/akhilanekkanti1/Final_ML_Blog"
-      }
-    ],
-    "date": "2020-11-30",
-    "categories": [],
-    "preview": {},
-    "last_modified": "2020-11-30T12:52:27-08:00",
-    "input_file": "welcome.utf8.md"
-  },
-  {
     "path": "posts/2020-11-30-title-of-my-new-post/",
     "title": "test",
     "description": "A short description of the post.",
@@ -29,6 +13,22 @@
     "categories": [],
     "preview": {},
     "last_modified": "2020-11-30T12:59:58-08:00",
-    "input_file": "title-of-my-new-post.utf8.md"
+    "input_file": {}
+  },
+  {
+    "path": "posts/welcome/",
+    "title": "Models! Models! Models!",
+    "description": "Welcome to our Machine Learning blog.",
+    "author": [
+      {
+        "name": "Akhila Nekkanti, Shaina Trevino, Jonathan Pedroza",
+        "url": "https://github.com/akhilanekkanti1/Final_ML_Blog"
+      }
+    ],
+    "date": "2020-11-30",
+    "categories": [],
+    "preview": {},
+    "last_modified": "2020-11-30T12:52:27-08:00",
+    "input_file": {}
   }
 ]
