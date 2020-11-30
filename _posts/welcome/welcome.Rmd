@@ -13,6 +13,7 @@ output:
     self_contained: false
 ---
 
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 
@@ -21,5 +22,16 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ```
 
+Data: create data folder with all relevant files  - Akhila
 
+Post 1 "Show me what you're working with": 
+- describe core features of the data, any additional data you joined in and why, and basic descriptives. - JP
+
+Post 2 "Old faithful...":
+
+Shaina - describe the first model fit (Lab 3)
+Akhila - describe the second model (Lab 5)
+JP - describe the third model (improve Lab5 recipe)
+
+Visualizations - Akhila? 
 
