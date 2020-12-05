@@ -15,17 +15,37 @@ output:
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-#Overview
+# Overview
+
++ Models were all ran with 1% of training data 
+
++ Run 3 different models and compare 
+
+# Model 1: Linear Regression (ST)
+
+### Splitting Data (same for all models)
+
++ splits and cv object
+
+### Recipe (same for all models)
+
+### Linear Regression Model
+
+### Tuning Hyperparameters
+
+### Model Results
+
+# Model 2: K Nearest Neighbor (KNN)
 
 
-#Model 1: Linear Regression (ST)
+# Model 3: Random Forest (AN)
 
+### Modified recipe to increase predictive performance (JP)
 
-#Model 2: K Nearest Neighbor (KNN)
+# Comparison
 
++ Plot comparing performance metrics
 
-#Model 3: Random Forest (AN)
++ Explanation of best model
 
-## Modified recipe to increase predictive performance (JP)
-
-#Comparison
++ How to get predictions from test.csv 
