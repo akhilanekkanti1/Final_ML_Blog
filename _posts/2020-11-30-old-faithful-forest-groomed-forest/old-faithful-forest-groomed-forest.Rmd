@@ -15,7 +15,17 @@ output:
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-Distill is a publication format for scientific and technical writing, native to the web.
+#Overview
 
-Learn more about using Distill at <https://rstudio.github.io/distill>.
 
+#Model 1: Linear Regression (ST)
+
+
+#Model 2: K Nearest Neighbor (KNN)
+
+
+#Model 3: Random Forest (AN)
+
+## Modified recipe to increase predictive performance (JP)
+
+#Comparison
