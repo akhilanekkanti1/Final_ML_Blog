@@ -27,13 +27,121 @@ knitr::opts_chunk$set(echo = FALSE)
 
 + splits and cv object
 
+```{r splits}
+d_split <- initial_split(d, strata = "score")
+
+d_train <- training(d_split)
+d_test  <- testing(d_split)
+train_cv <- vfold_cv(d_train, strata = "score")
+```
+
+
 ### Recipe (same for all models)
 
-### Linear Regression Model
+```{r semi-basic-recipe}
+rec_yoself <- recipe(score ~ .,data = d_train) %>%
+  step_mutate(tst_dt = as.numeric(lubridate::mdy_hms(tst_dt))) %>% #had  to add as.numeric to recipe to make xgboost model run
+  update_role(contains("id"), ncessch, new_role = "id vars") %>%
+  step_unknown(all_nominal()) %>% 
+  step_novel(all_nominal()) %>% 
+  step_dummy(all_nominal()) %>% 
+  step_nzv(all_predictors()) %>%
+  #step_mutate(z_rlprop = log(rl_prop),
+  #           z_flprop = log(fl_prop)) %>% 
+  #step_rm(fl_prop, rl_prop) %>% #remove potentially redundant variables
+  step_normalize(all_numeric(), -all_outcomes(), -has_role("id vars")) %>%
+  step_medianimpute(all_numeric(), -all_outcomes(), -has_role("id vars")) %>%  
+  step_interact(terms = ~lat:lon) %>% 
+  step_nzv(all_predictors()) #added due to error in xg boost about constant variables with 0sd
+```
+
+
+### Linear Regression Model (penalized?)
+
+```{r lr-mod}
+lr_mod <- linear_reg()  %>%
+  set_engine("glmnet") %>% 
+  set_mode("regression") %>% 
+  set_args(penalty = tune(), #take out for tutorial, add in next step
+           mixture = tune())
+
+```
+
 
 ### Tuning Hyperparameters
 
+```{r lr-mod}
+lr_mod <- linear_reg()  %>%
+  set_engine("glmnet") %>% 
+  set_mode("regression") %>% 
+  set_args(penalty = tune(), #tune
+           mixture = tune())
+
+```
+
 ### Model Results
+
+#### Workflow
+
+```{r lr-flo}
+lr_flo <- workflow() %>% 
+  add_recipe(rec_yoself) %>% 
+  add_model(lr_mod)
+
+```
+
+#### Tune Model
+
+```{r tune-lr}
+#grid
+lr_grd <- grid_regular(penalty(), mixture(), levels = 30)
+
+#tune model 
+
+tictoc::tic()
+lr_res <- tune::tune_grid(lr_flo, resamples = train_cv, grid = lr_grd,
+                           control = tune::control_resamples(save_pred = TRUE))
+tictoc::toc()
+
+```
+
+#### Select Best Tuning Parameters
+
+```{r best-lr}
+#select best tuning parameters
+lr_best <- lr_res %>% 
+  select_best(metric = "rmse")
+
+lr_best
+
+#finalize model in workflow
+lr_flo_final <- finalize_workflow(lr_flo, lr_best)
+
+```
+
+#### Final Fit
+
+This will automatically train the model specified by the workflow using the training data, and produce evaluations based on the test set.
+
+```{r lr-fit}
+#evaluate on test set with last_fit
+lr_final_res <- last_fit(
+  lr_flo_final,
+  split = d_split)
+
+lr_final_res %>%
+  collect_metrics()
+```
+
+#### Get Predictions
+
+```{r lr-pred}
+#get predictions from test set (within split object)
+test_preds <- lr_final_res %>% collect_predictions()
+test_preds
+
+```
+
 
 # Model 2: K Nearest Neighbor (KNN)
 
@@ -49,3 +157,37 @@ knitr::opts_chunk$set(echo = FALSE)
 + Explanation of best model
 
 + How to get predictions from test.csv 
+
+```{r predict-new-test-data}
+#import
+test <- read_csv("data/test.csv",
+                 col_types = cols(.default = col_guess(), 
+                                  calc_admn_cd = col_character()))
+
+#join
+test1 <- test %>% 
+  left_join(frl_stu) %>% 
+  left_join(staff) %>% 
+  left_join(ethnicities)
+
+```
+
+```{r predict-new-test-data-final-fit}
+#update with final chosen model (best fit)
+#If you want to use your model to predict the response for new observations, you need to use the fit() function on your workflow and the dataset that you want to fit the final model on (e.g. the complete training + testing dataset). 
+
+#workflow
+fit_workflow <- fit(FINALIZED_WORKFLOW_OBJECT_NAME, d)#Should this be d_train based on lab 3key. This blog says not - http://www.rebeccabarter.com/blog/2020-03-25_machine_learning/
+
+fit_workflow #view
+
+#use model to make predictions for test dataset (adding test1 as new data)
+preds_final <- predict(fit_workflow, test1)
+
+######################
+pred_frame <- tibble(Id = test1$id, Predicted = preds_final$.pred)
+
+#write_csv(pred_frame, "FILE-NAME.csv")
+
+```
+
