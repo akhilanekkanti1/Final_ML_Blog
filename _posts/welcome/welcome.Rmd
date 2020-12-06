@@ -29,7 +29,7 @@ Post 1 "Show me what you're working with":
 
 Post 2 "Old faithful...":
 
-Shaina - describe the first model fit (Lab 3)
+Shaina - describe splits, cv, & the first model fit (Lab 3)
 Akhila - describe the second model (Lab 5)
 JP - describe the third model (improve Lab5 recipe)
 
