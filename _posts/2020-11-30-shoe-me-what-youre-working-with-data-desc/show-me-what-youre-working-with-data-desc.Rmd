@@ -151,3 +151,5 @@ map2(d, d_names, ~bar_fun(d, .x) +
 Now let's get to building our recipe and the models!
 
 ![moving forward with models](https://media.giphy.com/media/26gYOXsPBh3qv420E/giphy.gif)
+
+## Note to put in recipe.
