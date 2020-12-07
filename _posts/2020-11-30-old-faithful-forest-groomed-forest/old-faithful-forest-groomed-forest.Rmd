@@ -28,6 +28,8 @@ knitr::opts_chunk$set(echo = FALSE)
 + splits and cv object
 
 ```{r splits}
+set.seed(1272020)
+
 d_split <- initial_split(d, strata = "score")
 
 d_train <- training(d_split)
