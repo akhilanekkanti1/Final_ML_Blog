@@ -28,6 +28,8 @@ knitr::opts_chunk$set(echo = FALSE)
 + splits and cv object
 
 ```{r splits}
+set.seed(1272020)
+
 d_split <- initial_split(d, strata = "score")
 
 d_train <- training(d_split)
@@ -145,6 +147,73 @@ test_preds
 
 # Model 2: K Nearest Neighbor (KNN)
 
+We'll use the same data and recipe from our first Model. 
+
+```{r}
+knn_mod <- nearest_neighbor()  %>%
+  set_engine("kknn") %>% 
+  set_mode("regression") %>% 
+  set_args(neighbors = tune(),
+           weight_func = tune(),
+           dist_power = tune())
+```
+
+Create a workflow
+```{r}
+
+knn_flo <- workflow() %>% 
+  add_recipe(rec_yoself) %>% 
+  add_model(knn_mod)
+
+```
+
+Set grid
+```{r}
+
+knn_par <- parameters(neighbors(), weight_func(), dist_power())
+knn_grd <- grid_max_entropy(knn_par, size = 50)
+```
+
+Tune grid
+```{r}
+cl <- makePSOCKcluster(all_cores)
+registerDoParallel(cl)
+foreach::getDoParWorkers()
+clusterEvalQ(cl, {library(tidymodels)})
+
+tictoc::tic()
+knn_res <- tune::tune_grid(knn_flo, resamples = train_cv, grid = knn_grd,
+                           control = tune::control_resamples(save_pred = TRUE))
+parallel::stopCluster(cl)
+tictoc::toc()
+```
+
+Select the best tuning parameters and use them to finalize the workflow.
+```{r}
+knn_best <- knn_res %>% 
+  select_best(metric = "rmse")
+
+knn_flo_final <- finalize_workflow(knn_flo, knn_best)
+```
+
+
+```{r}
+registerDoSEQ() 
+knn_final_res <- last_fit(
+  knn_flo_final,
+  split = d_split)
+
+knn_final_res %>%
+  collect_metrics()
+
+```
+
+Fit final workflow to make predictions on test data.
+```{r}
+fit_workflow <- fit(knn_flo_final, d)
+
+preds_final <- predict(fit_workflow, test1)
+```
 
 # Model 3: Random Forest (AN)
 

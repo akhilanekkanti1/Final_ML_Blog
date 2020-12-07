@@ -13,20 +13,28 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
+
+library(tidyverse)
+library(tidymodels)
+library(rio)
 ```
 
-Distill is a publication format for scientific and technical writing, native to the web.
+## Let's work with some data
 
-Learn more about using Distill at <https://rstudio.github.io/distill>.
+In order to start building our models, we need to first start off by loading some data. According to the competition, we are all using the same initial data. In the code chunk below, you can see that we loaded the data from our github page. You could also download the data directly from [kaggle.com](https://www.kaggle.com/c/edld-654-fall-2020/data) at the competition page. Thankfully for this competition there is also a data dictionary that provides details about the variables in the dataset. Variables consist of school data from grades 3-8 and includes some basic demographic information of students, such as race/ethnicity and sex. There are also several id variables including the `attnd_schl_inst_id` and the `ncessch` variables, which are the Oregon Department of Education (ODE) assigned institution identifier for the attending school and the National Center for Education Statistics (NCES) school identifier. These two id variables were useful for being able to join this dataset with additional datasets used. 
 
 ```{r}
 #code used in talapas
-train <- read_csv("data/train.csv",
+train <- read_csv("https://raw.githubusercontent.com/akhilanekkanti1/Final_ML_Blog/main/data/train.csv",
                   col_types = cols(.default = col_guess(), 
                                    calc_admn_cd = col_character()))  %>% 
   select(-classification) 
 
+```
 
+Now that we have our competition data loaded, we will also add some additional sources of data. Additional sources of data will be helpful in making a better performing model. Data was joined from additional sources, such as the [NCES's website](https://nces.ed.gov/ccd/ccddata.asp). Some variables that were of specific interest for our models of predicting students' scores were the amount of students that that qualified for free lunch or for reduced-price lunch programs. We also collected data on the amount of students for each school. We can then join these two datasets together to create what we have labeled as `frl_stu`. Together the data on students that qualified for free or reduced-price lunch and the student counts were used to calculate the proportion of students that received free or reduced-price lunch for each school.
+
+```{r}
 #edited (could export and then import that csv if needed)
 frl <- import("https://nces.ed.gov/ccd/Data/zip/ccd_sch_033_1718_l_1a_083118.zip",
               setclass = "tbl_df")  %>% 
@@ -39,14 +47,26 @@ frl <- import("https://nces.ed.gov/ccd/Data/zip/ccd_sch_033_1718_l_1a_083118.zip
   janitor::clean_names()  %>% 
   mutate(ncessch = as.double(ncessch))
 
-stu_counts <- import("data/achievement-gaps-geocoded.csv",
+stu_counts <- import("https://raw.githubusercontent.com/akhilanekkanti1/Final_ML_Blog/main/data/achievement-gaps-geocoded.csv",
                      setclass = "tbl_df")  %>% 
   filter(state == "OR" & year == 1718)  %>% 
   count(ncessch, wt = n)  %>% 
   mutate(ncessch = as.double(ncessch))
 
+frl_stu <- left_join(frl, stu_counts)
 
-or_schools <- readxl::read_xlsx("data/fallmembershipreport_20192020.xlsx",
+frl_stu <- frl_stu %>% mutate(fl_prop = free_lunch_qualified/n,
+                              rl_prop = reduced_price_lunch_qualified/n) %>%
+  select(ncessch,fl_prop, rl_prop)
+
+```
+
+We were also interested in the makeup of these schools so we gathered some additional data on percentage of racial/ethnic groups at each school as well as teachers' pay. While the competition dataset had a variable of race/ethnicity variable (`ethnic_cd`), we wanted to collect data on the percentages of these groups as well. Lastly, we joined these two new datasets with the `frl_stu` dataset and the competition dataset. The final two pieces of code are for you to follow along get the same results as us and to only collect a small sample of the data so your computer doesn't fail you.
+
+![park and rec computer](https://media.giphy.com/media/ktcUyw6mBlMVa/giphy.gif)
+
+```{r}
+or_schools <- readxl::read_xlsx(here::here("data", "fallmembershipreport_20192020.xlsx"),
                                 sheet = 4) 
 
 #tidy ethnicity data
@@ -58,29 +78,78 @@ ethnicities <- or_schools %>%
   janitor::clean_names()
 names(ethnicities) <- gsub("x2019_20_percent", "p", names(ethnicities))
 
-staff <- import("data/staff.csv",
+
+staff <- import("https://raw.githubusercontent.com/akhilanekkanti1/Final_ML_Blog/main/data/staff.csv",
                 setclass = "tbl_df") %>% 
   janitor::clean_names() %>%
   filter(st == "OR") %>%
-  select(ncessch,schid,teachers) %>%
+  select(ncessch, schid, teachers) %>%
   mutate(ncessch = as.double(ncessch))
-
-
-
-frl_stu <- left_join(frl, stu_counts)
-
-frl_stu <- frl_stu %>% mutate(fl_prop = free_lunch_qualified/n,
-                              rl_prop = reduced_price_lunch_qualified/n) %>%
-  select(ncessch,fl_prop, rl_prop)
-
 
 d <- train %>% 
   left_join(frl_stu) %>% 
   left_join(staff) %>% 
   left_join(ethnicities)
 
+set.seed(1272020)
+
 d <- d %>% sample_frac(.01) #added sample frac to run on local/knit
+```
+
+## Show me what you got! 
+
+![Show me what you got](https://media.giphy.com/media/26DOs997h6fgsCthu/giphy.gif)
+Okay we got our data all set up, so let's first start off by examining the structure of our dataset. We can see that most of the data are either characters or numeric columns. Next, we can run some basic descriptive statistics. As we can see from the chart, these descriptives can only tell us so much so its always best to also visualize your data. 
+
+```{r}
+str(d)
+
+psych::describe(d, na.rm = TRUE)
+```
+
+Before we can visualize our data, we created a couple of functions to help us visualize all the variables we have in our object `d`. The first is to create a histogram of each numeric variable in our dataframe and the second is to examine a bar graph for the character variables. These functions also have some parameters for the plots we will create, such as the amount of bins for the histograms and the color and fill of each plot. We chose dodgerblue for two reasons:
+
+1. World
+2. Champs
+
+~![world champs](https://media.giphy.com/media/599pRNRXwudF8FwgV2/giphy.gif)
+
+```{r}
+
+
+
+
+hist_fun <- function(data, x){
+  ggplot({{data}}, aes({{x}})) +
+    geom_histogram(bins = 20, color = 'white',
+                   fill = 'dodgerblue') +
+    theme_minimal()
+}
+
+bar_fun <- function(data, x){
+  ggplot({{data}}, aes({{x}})) +
+    geom_bar(color = 'white', fill = 'dodgerblue') +
+    theme_minimal()
+}
+
+
+
+
+numeric_only <- d %>%
+  dplyr::select_if(is.numeric)
+
+d_names <- names(d)
+d_names_num <- names(dplyr::select_if(d, is.numeric))
+
+map2(numeric_only, d_names_num, ~hist_fun(numeric_only, .x) +
+      labs(title = glue::glue('Variable: {.y}')))
+
+map2(d, d_names, ~bar_fun(d, .x) +
+       labs(title = glue::glue('Variable: {.y}')))
 
 ```
 
 
+Now let's get to building our recipe and the models!
+
+![moving forward with models](https://media.giphy.com/media/26gYOXsPBh3qv420E/giphy.gif)
