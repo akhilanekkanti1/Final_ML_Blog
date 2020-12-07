@@ -145,7 +145,7 @@ test_preds
 ```
 
 
-# Model 2: K Nearest Neighbor (KNN)
+# Model 2: K Nearest Neighbor (KNN) (AN)
 
 We'll use the same data and recipe from our first Model. 
 
@@ -170,8 +170,8 @@ knn_flo <- workflow() %>%
 Set grid
 ```{r}
 
-knn_par <- parameters(neighbors(), weight_func(), dist_power())
-knn_grd <- grid_max_entropy(knn_par, size = 50)
+knn_par <- parameters(neighbors(range = (c(10, 75))), weight_func(), dist_power()) #testing with smaller range due to computation
+knn_grd <- grid_max_entropy(knn_par, size = 30) #testing with smaller size due to computation
 ```
 
 Tune grid
@@ -208,14 +208,8 @@ knn_final_res %>%
 
 ```
 
-Fit final workflow to make predictions on test data.
-```{r}
-fit_workflow <- fit(knn_flo_final, d)
 
-preds_final <- predict(fit_workflow, test1)
-```
-
-# Model 3: Random Forest (AN)
+# Model 3: Random Forest (JP)
 
 ### Modified recipe to increase predictive performance (JP)
 
