@@ -12,7 +12,7 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(eval = FALSE, include = FALSE)
+knitr::opts_chunk$set(eval = TRUE, echo = FALSE)
 library(tidyverse)
 library(tidymodels)
 library(rio)
@@ -113,7 +113,7 @@ Before we can visualize our data, we created a couple of functions to help us vi
 
 ~![world champs](https://media.giphy.com/media/599pRNRXwudF8FwgV2/giphy.gif)
 
-```{r}
+```{r echo = TRUE}
 
 
 

@@ -12,7 +12,7 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(eval = FALSE)
+knitr::opts_chunk$set(echo = TRUE, eval=FALSE)
 ```
 
 # Overview
@@ -27,7 +27,7 @@ knitr::opts_chunk$set(eval = FALSE)
 
 + splits and cv object
 
-```{r splits}
+```{r splits, echo=TRUE}
 set.seed(1272020)
 
 d_split <- initial_split(d, strata = "score")
@@ -123,7 +123,7 @@ lr_flo_final <- finalize_workflow(lr_flo, lr_best)
 
 #### Final Fit
 
-This will automatically train the model specified by the workflow using the training data, and produce evaluations based on the test set.
+#### This will automatically train the model specified by the workflow using the training data, and produce evaluations based on the test set.
 
 ```{r lr-fit}
 #evaluate on test set with last_fit

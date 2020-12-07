@@ -974,69 +974,165 @@
 <li>splits and cv object</li>
 </ul>
 <div class="layout-chunk" data-layout="l-body">
+<pre class="r"><code>
+set.seed(1272020)
 
+d_split &lt;- initial_split(d, strata = &quot;score&quot;)
+
+d_train &lt;- training(d_split)
+d_test  &lt;- testing(d_split)
+train_cv &lt;- vfold_cv(d_train, strata = &quot;score&quot;)</code></pre>
 </div>
 <h3 id="recipe-same-for-all-models">Recipe (same for all models)</h3>
 <div class="layout-chunk" data-layout="l-body">
-
+<pre class="r"><code>
+rec_yoself &lt;- recipe(score ~ .,data = d_train) %&gt;%
+  step_mutate(tst_dt = as.numeric(lubridate::mdy_hms(tst_dt))) %&gt;% #had  to add as.numeric to recipe to make xgboost model run
+  update_role(contains(&quot;id&quot;), ncessch, new_role = &quot;id vars&quot;) %&gt;%
+  step_unknown(all_nominal()) %&gt;% 
+  step_novel(all_nominal()) %&gt;% 
+  step_dummy(all_nominal()) %&gt;% 
+  step_nzv(all_predictors()) %&gt;%
+  #step_mutate(z_rlprop = log(rl_prop),
+  #           z_flprop = log(fl_prop)) %&gt;% 
+  #step_rm(fl_prop, rl_prop) %&gt;% #remove potentially redundant variables
+  step_normalize(all_numeric(), -all_outcomes(), -has_role(&quot;id vars&quot;)) %&gt;%
+  step_medianimpute(all_numeric(), -all_outcomes(), -has_role(&quot;id vars&quot;)) %&gt;%  
+  step_interact(terms = ~lat:lon) %&gt;% 
+  step_nzv(all_predictors()) #added due to error in xg boost about constant variables with 0sd</code></pre>
 </div>
 <h3 id="linear-regression-model-penalized">Linear Regression Model (penalized?)</h3>
 <div class="layout-chunk" data-layout="l-body">
-
+<pre class="r"><code>
+lr_mod &lt;- linear_reg()  %&gt;%
+  set_engine(&quot;glmnet&quot;) %&gt;% 
+  set_mode(&quot;regression&quot;) %&gt;% 
+  set_args(penalty = tune(), #take out for tutorial, add in next step
+           mixture = tune())</code></pre>
 </div>
 <h3 id="tuning-hyperparameters">Tuning Hyperparameters</h3>
 <div class="layout-chunk" data-layout="l-body">
-
+<pre class="r"><code>
+lr_mod &lt;- linear_reg()  %&gt;%
+  set_engine(&quot;glmnet&quot;) %&gt;% 
+  set_mode(&quot;regression&quot;) %&gt;% 
+  set_args(penalty = tune(), #tune
+           mixture = tune())</code></pre>
 </div>
 <h3 id="model-results">Model Results</h3>
 <h4 id="workflow">Workflow</h4>
 <div class="layout-chunk" data-layout="l-body">
-
+<pre class="r"><code>
+lr_flo &lt;- workflow() %&gt;% 
+  add_recipe(rec_yoself) %&gt;% 
+  add_model(lr_mod)</code></pre>
 </div>
 <h4 id="tune-model">Tune Model</h4>
 <div class="layout-chunk" data-layout="l-body">
+<pre class="r"><code>
+#grid
+lr_grd &lt;- grid_regular(penalty(), mixture(), levels = 30)
 
+#tune model 
+
+tictoc::tic()
+lr_res &lt;- tune::tune_grid(lr_flo, resamples = train_cv, grid = lr_grd,
+                           control = tune::control_resamples(save_pred = TRUE))
+tictoc::toc()</code></pre>
 </div>
 <h4 id="select-best-tuning-parameters">Select Best Tuning Parameters</h4>
 <div class="layout-chunk" data-layout="l-body">
+<pre class="r"><code>
+#select best tuning parameters
+lr_best &lt;- lr_res %&gt;% 
+  select_best(metric = &quot;rmse&quot;)
 
+lr_best
+
+#finalize model in workflow
+lr_flo_final &lt;- finalize_workflow(lr_flo, lr_best)</code></pre>
 </div>
 <h4 id="final-fit">Final Fit</h4>
 <p>This will automatically train the model specified by the workflow using the training data, and produce evaluations based on the test set.</p>
 <div class="layout-chunk" data-layout="l-body">
+<pre class="r"><code>
+#evaluate on test set with last_fit
+lr_final_res &lt;- last_fit(
+  lr_flo_final,
+  split = d_split)
 
+lr_final_res %&gt;%
+  collect_metrics()</code></pre>
 </div>
 <h4 id="get-predictions">Get Predictions</h4>
 <div class="layout-chunk" data-layout="l-body">
-
+<pre class="r"><code>
+#get predictions from test set (within split object)
+test_preds &lt;- lr_final_res %&gt;% collect_predictions()
+test_preds</code></pre>
 </div>
 <h1 id="model-2-k-nearest-neighbor-knn">Model 2: K Nearest Neighbor (KNN)</h1>
 <p>We’ll use the same data and recipe from our first Model.</p>
 <div class="layout-chunk" data-layout="l-body">
-
+<pre class="r"><code>
+knn_mod &lt;- nearest_neighbor()  %&gt;%
+  set_engine(&quot;kknn&quot;) %&gt;% 
+  set_mode(&quot;regression&quot;) %&gt;% 
+  set_args(neighbors = tune(),
+           weight_func = tune(),
+           dist_power = tune())</code></pre>
 </div>
 Create a workflow
 <div class="layout-chunk" data-layout="l-body">
-
+<pre class="r"><code>
+knn_flo &lt;- workflow() %&gt;% 
+  add_recipe(rec_yoself) %&gt;% 
+  add_model(knn_mod)</code></pre>
 </div>
 Set grid
 <div class="layout-chunk" data-layout="l-body">
-
+<pre class="r"><code>
+knn_par &lt;- parameters(neighbors(), weight_func(), dist_power())
+knn_grd &lt;- grid_max_entropy(knn_par, size = 50)</code></pre>
 </div>
 Tune grid
 <div class="layout-chunk" data-layout="l-body">
+<pre class="r"><code>
+cl &lt;- makePSOCKcluster(all_cores)
+registerDoParallel(cl)
+foreach::getDoParWorkers()
+clusterEvalQ(cl, {library(tidymodels)})
 
+tictoc::tic()
+knn_res &lt;- tune::tune_grid(knn_flo, resamples = train_cv, grid = knn_grd,
+                           control = tune::control_resamples(save_pred = TRUE))
+parallel::stopCluster(cl)
+tictoc::toc()</code></pre>
 </div>
 Select the best tuning parameters and use them to finalize the workflow.
 <div class="layout-chunk" data-layout="l-body">
+<pre class="r"><code>
+knn_best &lt;- knn_res %&gt;% 
+  select_best(metric = &quot;rmse&quot;)
 
+knn_flo_final &lt;- finalize_workflow(knn_flo, knn_best)</code></pre>
 </div>
 <div class="layout-chunk" data-layout="l-body">
+<pre class="r"><code>
+registerDoSEQ() 
+knn_final_res &lt;- last_fit(
+  knn_flo_final,
+  split = d_split)
 
+knn_final_res %&gt;%
+  collect_metrics()</code></pre>
 </div>
 Fit final workflow to make predictions on test data.
 <div class="layout-chunk" data-layout="l-body">
+<pre class="r"><code>
+fit_workflow &lt;- fit(knn_flo_final, d)
 
+preds_final &lt;- predict(fit_workflow, test1)</code></pre>
 </div>
 <h1 id="model-3-random-forest-an">Model 3: Random Forest (AN)</h1>
 <h3 id="modified-recipe-to-increase-predictive-performance-jp">Modified recipe to increase predictive performance (JP)</h3>
@@ -1047,10 +1143,35 @@ Fit final workflow to make predictions on test data.
 <li><p>How to get predictions from test.csv</p></li>
 </ul>
 <div class="layout-chunk" data-layout="l-body">
+<pre class="r"><code>
+#import
+test &lt;- read_csv(&quot;data/test.csv&quot;,
+                 col_types = cols(.default = col_guess(), 
+                                  calc_admn_cd = col_character()))
 
+#join
+test1 &lt;- test %&gt;% 
+  left_join(frl_stu) %&gt;% 
+  left_join(staff) %&gt;% 
+  left_join(ethnicities)</code></pre>
 </div>
 <div class="layout-chunk" data-layout="l-body">
+<pre class="r"><code>
+#update with final chosen model (best fit)
+#If you want to use your model to predict the response for new observations, you need to use the fit() function on your workflow and the dataset that you want to fit the final model on (e.g. the complete training + testing dataset). 
 
+#workflow
+fit_workflow &lt;- fit(FINALIZED_WORKFLOW_OBJECT_NAME, d)#Should this be d_train based on lab 3key. This blog says not - http://www.rebeccabarter.com/blog/2020-03-25_machine_learning/
+
+fit_workflow #view
+
+#use model to make predictions for test dataset (adding test1 as new data)
+preds_final &lt;- predict(fit_workflow, test1)
+
+######################
+pred_frame &lt;- tibble(Id = test1$id, Predicted = preds_final$.pred)
+
+#write_csv(pred_frame, &quot;FILE-NAME.csv&quot;)</code></pre>
 </div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
