@@ -12,7 +12,7 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(eval = FALSE)
 ```
 
 # Overview
@@ -60,7 +60,7 @@ rec_yoself <- recipe(score ~ .,data = d_train) %>%
 
 ### Linear Regression Model (penalized?)
 
-```{r lr-mod}
+```{r lrmod}
 lr_mod <- linear_reg()  %>%
   set_engine("glmnet") %>% 
   set_mode("regression") %>% 
