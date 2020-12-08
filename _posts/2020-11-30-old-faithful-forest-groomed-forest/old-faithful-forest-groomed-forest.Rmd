@@ -153,9 +153,9 @@ We'll use the same data and recipe from our first Model.
 knn_mod <- nearest_neighbor()  %>%
   set_engine("kknn") %>% 
   set_mode("regression") %>% 
-  set_args(neighbors = tune(),
-           weight_func = tune(),
-           dist_power = tune())
+  set_args(neighbors = tune())
+
+#had to take out other tuning parameters due to run times > 16 hours on talapas (e.g., weight_func = tune(), dist_power = tune()))
 ```
 
 Create a workflow
@@ -169,9 +169,9 @@ knn_flo <- workflow() %>%
 
 Set grid
 ```{r}
-
-knn_par <- parameters(neighbors(range = (c(10, 75))), weight_func(), dist_power()) #testing with smaller range due to computation
-knn_grd <- grid_max_entropy(knn_par, size = 30) #testing with smaller size due to computation
+#had to take out due to computation
+#knn_par <- parameters(neighbors(range = (c(10, 75))), weight_func(), dist_power()) #testing with smaller range due to computation
+knn_grd <- grid_max_entropy(neighbors(), size = 30) #testing with smaller size due to computation 
 ```
 
 Tune grid
