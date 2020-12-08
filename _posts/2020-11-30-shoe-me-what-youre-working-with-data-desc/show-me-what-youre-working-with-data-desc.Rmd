@@ -154,3 +154,17 @@ Now let's get to building our recipe and the models!
 ![moving forward with models](https://media.giphy.com/media/26gYOXsPBh3qv420E/giphy.gif)
 
 ## Note to put in recipe.
+
+```{r recipe-for-all-datadesc}
+rec_yoself <- recipe(score ~ .,data = d_train) %>%
+  step_mutate(tst_dt = as.numeric(lubridate::mdy_hms(tst_dt))) %>% #had  to add as.numeric to recipe to make xgboost model run
+  update_role(contains("id"), ncessch, new_role = "id vars") %>%
+  step_unknown(all_nominal()) %>% 
+  step_novel(all_nominal()) %>% 
+  step_dummy(all_nominal()) %>% 
+  step_nzv(all_predictors()) %>%
+  step_normalize(all_numeric(), -all_outcomes(), -has_role("id vars")) %>%
+  step_medianimpute(all_numeric(), -all_outcomes(), -has_role("id vars")) %>%  
+  step_interact(terms = ~lat:lon) %>% 
+  step_nzv(all_predictors()) #added due to error in xg boost about constant variables with 0sd
+```

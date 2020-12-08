@@ -1,5 +1,5 @@
 ---
-title: "Old Faithful, Forest, Groomed Forest"
+title: "Old Faithful, Meet the Neighbors, Lost in the Forest"
 description: |
   A short description of the post.
 author:
@@ -21,7 +21,7 @@ knitr::opts_chunk$set(echo = TRUE, eval=FALSE)
 
 + Run 3 different models and compare 
 
-# Model 1: Linear Regression (ST)
+# Model 1: Old Faithful - Penalized Regression (ST)
 
 ### Splitting Data (same for all models)
 
@@ -40,7 +40,9 @@ train_cv <- vfold_cv(d_train, strata = "score")
 
 ### Recipe (same for all models)
 
-```{r semi-basic-recipe}
+Note: described in data description (link to post), code is copied here for completeness/reproducibility 
+
+```{r recipe-for-all}
 rec_yoself <- recipe(score ~ .,data = d_train) %>%
   step_mutate(tst_dt = as.numeric(lubridate::mdy_hms(tst_dt))) %>% #had  to add as.numeric to recipe to make xgboost model run
   update_role(contains("id"), ncessch, new_role = "id vars") %>%
@@ -48,9 +50,6 @@ rec_yoself <- recipe(score ~ .,data = d_train) %>%
   step_novel(all_nominal()) %>% 
   step_dummy(all_nominal()) %>% 
   step_nzv(all_predictors()) %>%
-  #step_mutate(z_rlprop = log(rl_prop),
-  #           z_flprop = log(fl_prop)) %>% 
-  #step_rm(fl_prop, rl_prop) %>% #remove potentially redundant variables
   step_normalize(all_numeric(), -all_outcomes(), -has_role("id vars")) %>%
   step_medianimpute(all_numeric(), -all_outcomes(), -has_role("id vars")) %>%  
   step_interact(terms = ~lat:lon) %>% 
@@ -145,7 +144,7 @@ test_preds
 ```
 
 
-# Model 2: K Nearest Neighbor (KNN) (AN)
+# Model 2: Meet the Neighbors - K Nearest Neighbor (KNN) (AN)
 
 We'll use the same data and recipe from our first Model. 
 
@@ -209,7 +208,7 @@ knn_final_res %>%
 ```
 
 
-# Model 3: Random Forest (JP)
+# Model 3: Lost in the Forest - Random Forest (JP)
 
 ### Modified recipe to increase predictive performance (JP)
 
