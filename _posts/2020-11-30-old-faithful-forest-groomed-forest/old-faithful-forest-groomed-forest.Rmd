@@ -1,9 +1,9 @@
 ---
-title: "Old Faithful, Meet the Neighbors, Lost in the Forest"
+title: "Old faithful, Meet the Neighbors, and Lost in the Forest"
 description: |
-  A short description of the post.
+  Model description and evaluation.
 author:
-  - name: Akhila Nekkanti, Shaina Trevino, Jonathan Pedroza
+  - name: Shaina Trevino, Jonathan Pedroza, Akhila Nekkanti
     url: https://github.com/akhilanekkanti1/Final_ML_Blog
 date: 11-30-2020
 output:
@@ -95,9 +95,15 @@ lr_rds %>%
   collect_metrics()
 
 lr_rds %>%  
-  show_best(metric = "rmse") 
+  show_best(metric = "rmse")
 
-lr_rds$.workflow
+# wrkfl %>% 
+#   pull_workflow_spec()
+# 
+# wrkfl <- workflow(wrkfl)
+# 
+# lr_rds$.workflow
+# #$fit$spec$args
 ```
 
 
@@ -207,9 +213,13 @@ knn_res <- tune::tune_grid(knn_flo, resamples = train_cv, grid = knn_grd,
                            control = tune::control_resamples(save_pred = TRUE))
 parallel::stopCluster(cl)
 tictoc::toc()
+
+#1772.517 sec elapsed - from talapas - over 16 hours with all tuning parameters
 ```
 
 Select the best tuning parameters and use them to finalize the workflow.
+
++ Final parameters chosen (after tuning/selecting best) - 10 neighbors (others are default due to computation time)
 ```{r}
 knn_best <- knn_res %>% 
   select_best(metric = "rmse")
@@ -230,7 +240,11 @@ knn_final_res %>%
 ```
 
 
-# Model 3: Lost in the Forest - Random Forest (JP)
+# Model 3: Lost in the Forest - Random Forest (JP)]
+
+Final parameters chosen (after tuning/selecting best) - mtry = 5, min_n = 40, trees = 1000
+
+13919.058 sec elapsed - from talapas
 
 ### Modified recipe to increase predictive performance (JP)
 
@@ -239,6 +253,22 @@ knn_final_res %>%
 + Plot comparing performance metrics
 
 + Explanation of best model
+
+```{r from-rds-files}
+#info extracted from rds files & from talapas .Rout files (see lab 4 repo/files for final folder)
+#Regression model
+#1552.898 sec elapsed on talapas
+#RMSE = 89.02
+
+#KNN model
+#1772.517 sec elapsed on talapas
+#RMSE 92.2 
+
+#RF model
+#13919.058 sec elapsed on talapas
+#RMSE 85.8
+```
+
 
 + How to get predictions from test.csv 
 
