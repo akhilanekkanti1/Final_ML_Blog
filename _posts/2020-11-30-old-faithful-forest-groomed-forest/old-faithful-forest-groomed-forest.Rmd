@@ -172,18 +172,53 @@ test_preds
 
 # Model 2: Meet the Neighbors - K Nearest Neighbor (KNN) (AN)
 
-We'll use the same data and recipe from our first Model. 
+#### We'll use the same data and recipe from our first Model - This way, we can see whether improvements to model fit are actually due to an improved model. 
+
+##### A K nearest neighbor (KNN) model aims to find the closest *neighbors*, or closest data points in the predictor space. This means that the model uses information from previous samples to find the points that are closest in proximity to the new sample. While KNN models can be computationally inefficient, they make fewer assumptions about the data and may be preferable when datasets are nonparametric, or where distributions are largely unknown.
 
 ```{r}
 knn_mod <- nearest_neighbor()  %>%
   set_engine("kknn") %>% 
-  set_mode("regression") %>% 
-  set_args(neighbors = tune())
-
-#had to take out other tuning parameters due to run times > 16 hours on talapas (e.g., weight_func = tune(), dist_power = tune()))
 ```
 
-Create a workflow
+##### When specifying the model, we set the mode to "regression". This tells it to take the average outcome of *K* cases, rather than the mode. Because our outcome is continuous, we went with the regression method.
+```{r}
+#knn_mod <- nearest_neighbor()  %>%
+#  set_engine("kknn") %>% 
+  set_mode("regression") %>%
+```
+
+#### Next we determine how to identify the neighbors. The defaults from {kknn} include 5 neighbors, set the 'weight function' to "optimal", and the 'dist_power' to 2. 
+
+* If K is small (e.g., 1), there is greater potential for over-fitting as it is more susceptible to changes in the data (think low bias but high variance). Larger values of K means the model will be looking at potentially irrelevant data points. This can be helpgul when data are noisy, but not always. Think high bias, and low variance. 
+
+* The weight_func determines how to weight the distances between samples. In other words, it determines whether or not to penalize for a point being farther away. 
+
+* The dist_power function specifies how far points should be. 
+
+##### Here, we set each of these parameters to 'tune()', so that the model could determine the best values based on the data.
+```{r}
+#knn_mod <- nearest_neighbor()  %>%
+#  set_engine("kknn") %>% 
+#  set_mode("regression") %>% 
+  set_args(neighbors = tune()),
+           weight_func = tune(),
+           dist_power = tune())
+
+```
+
+##### Unfortunately, setting all three parameters to 'tune()' was computationally inefficient. That is, it took longer than 16 hours to run on a cluster computer. So, we removed the tuning parameters for 'weight_func' and 'dist_power', and left these to the defaults. We felt it was important to tune the neighbors however.
+```{r}
+
+knn_mod <- nearest_neighbor()  %>%
+  set_engine("kknn") %>% 
+  set_mode("regression") %>% 
+  set_args(neighbors = tune())#,
+           #weight_func = tune()#,
+           #dist_power = tune())
+```
+
+##### Woohoo! Model = specified! Now to create a workflow and start running things. Here we use a workflow to bundle our preprocessing and modelling together. We're using the same recipe as before, 'rec_yoself', and the model we just created, 'knn_mod'.
 ```{r}
 
 knn_flo <- workflow() %>% 
@@ -192,41 +227,48 @@ knn_flo <- workflow() %>%
 
 ```
 
-Set grid
+##### We aimed to use a space-filling design when specifying our non-regular grid. This type of design aims to keep potential points away from each other while also encompassing the entire parameter space. Here, we specify the parameters, as well as the range for neighbors, prior to creating the grid. (*Note - this is prior to removing the tuning parameters above)
+
 ```{r}
-#had to take out due to computation
+knn_par <- parameters(neighbors(range = (c(10, 75))), weight_func(), dist_power()) #testing with smaller range due to computation
+knn_grd <- grid_max_entropy(knn_par, size = 30)
+```
+
+##### Unfortunately, this too contributed to a computationally inefficient model. So, we used the defaults for 'grid_max_entropy' and only specified neighbors and size of the grid.
+
+```{r}
+
 #knn_par <- parameters(neighbors(range = (c(10, 75))), weight_func(), dist_power()) #testing with smaller range due to computation
 knn_grd <- grid_max_entropy(neighbors(), size = 30) #testing with smaller size due to computation 
 ```
 
-Tune grid
+##### Finally, we are ready to tune our grid according to our cross-fold validated data. We specify our workflow (knn_flo), the resamples we want the model to use (train_cv), and the grid we created above (knn_grd).
+
+##### You'll notice in between the hashtags, we include some code to employ parallel processing. This allows the model to run on each sample simultaneously, in an attempt to cut down on computation time.  
 ```{r}
+#
 cl <- makePSOCKcluster(all_cores)
 registerDoParallel(cl)
 foreach::getDoParWorkers()
 clusterEvalQ(cl, {library(tidymodels)})
+#
 
-tictoc::tic()
 knn_res <- tune::tune_grid(knn_flo, resamples = train_cv, grid = knn_grd,
                            control = tune::control_resamples(save_pred = TRUE))
-parallel::stopCluster(cl)
-tictoc::toc()
 
-#1772.517 sec elapsed - from talapas - over 16 hours with all tuning parameters
+#
+parallel::stopCluster(cl)
+#
 ```
 
-Select the best tuning parameters and use them to finalize the workflow.
+##### Lastly, we want to select the best tuning parameters and use them to finalize the workflow. As you may have guessed, the only tuned parameters are the number of neighbors - since both the dist_func and weight_func were too computationally expensive to move away from defaults. The  optimal number of neighbors for our model was `10`.
 
-+ Final parameters chosen (after tuning/selecting best) - 10 neighbors (others are default due to computation time)
 ```{r}
 knn_best <- knn_res %>% 
   select_best(metric = "rmse")
 
 knn_flo_final <- finalize_workflow(knn_flo, knn_best)
-```
 
-
-```{r}
 registerDoSEQ() 
 knn_final_res <- last_fit(
   knn_flo_final,
@@ -234,11 +276,32 @@ knn_final_res <- last_fit(
 
 knn_final_res %>%
   collect_metrics()
+```
+
+```{r eval = FALSE, echo = FALSE}
+knn_rds <- readRDS("model2-knn.Rds")
+
+knn_rds %>%  
+  show_best(metric = "rmse")
+
+# wrkfl %>% 
+#   pull_workflow_spec()
+# 
+# wrkfl <- workflow(wrkfl)
+# 
+# lr_rds$.workflow
+# #$fit$spec$args
+```
+
+As you can see, our final performance metric (RMSE) for our penalized regression model is `89.03`. 
+
+```{r}
+
 
 ```
 
 
-# Model 3: Lost in the Forest - Random Forest (JP)]
+# Model 3: Lost in the Forest - Random Forest (JP)
 
 Final parameters chosen (after tuning/selecting best) - mtry = 5, min_n = 40, trees = 1000
 

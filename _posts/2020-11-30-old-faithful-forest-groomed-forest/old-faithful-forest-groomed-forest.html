@@ -1078,60 +1078,91 @@ test_preds &lt;- lr_final_res %&gt;% collect_predictions()
 test_preds</code></pre>
 </div>
 <h1 id="model-2-meet-the-neighbors---k-nearest-neighbor-knn-an">Model 2: Meet the Neighbors - K Nearest Neighbor (KNN) (AN)</h1>
-<p>We’ll use the same data and recipe from our first Model.</p>
+<h4 id="well-use-the-same-data-and-recipe-from-our-first-model---this-way-we-can-see-whether-improvements-to-model-fit-are-actually-due-to-an-improved-model.">We’ll use the same data and recipe from our first Model - This way, we can see whether improvements to model fit are actually due to an improved model.</h4>
+<h5 id="a-k-nearest-neighbor-knn-model-aims-to-find-the-closest-neighbors-or-closest-data-points-in-the-predictor-space.-this-means-that-the-model-uses-information-from-previous-samples-to-find-the-points-that-are-closest-in-proximity-to-the-new-sample.-while-knn-models-can-be-computationally-inefficient-they-make-fewer-assumptions-about-the-data-and-may-be-preferable-when-datasets-are-nonparametric-or-where-distributions-are-largely-unknown.">A K nearest neighbor (KNN) model aims to find the closest <em>neighbors</em>, or closest data points in the predictor space. This means that the model uses information from previous samples to find the points that are closest in proximity to the new sample. While KNN models can be computationally inefficient, they make fewer assumptions about the data and may be preferable when datasets are nonparametric, or where distributions are largely unknown.</h5>
+<div class="layout-chunk" data-layout="l-body">
+<pre class="r"><code>
+knn_mod &lt;- nearest_neighbor()  %&gt;%
+  set_engine(&quot;kknn&quot;) %&gt;% </code></pre>
+</div>
+<h5 id="when-specifying-the-model-we-set-the-mode-to-regression.-this-tells-it-to-take-the-average-outcome-of-k-cases-rather-than-the-mode.-because-our-outcome-is-continuous-we-went-with-the-regression-method.">When specifying the model, we set the mode to “regression”. This tells it to take the average outcome of <em>K</em> cases, rather than the mode. Because our outcome is continuous, we went with the regression method.</h5>
+<div class="layout-chunk" data-layout="l-body">
+<pre class="r"><code>
+#knn_mod &lt;- nearest_neighbor()  %&gt;%
+#  set_engine(&quot;kknn&quot;) %&gt;% 
+  set_mode(&quot;regression&quot;) %&gt;%</code></pre>
+</div>
+<h4 id="next-we-determine-how-to-identify-the-neighbors.-the-defaults-from-kknn-include-5-neighbors-set-the-weight-function-to-optimal-and-the-dist_power-to-2.">Next we determine how to identify the neighbors. The defaults from {kknn} include 5 neighbors, set the ‘weight function’ to “optimal”, and the ‘dist_power’ to 2.</h4>
+<ul>
+<li><p>If K is small (e.g., 1), there is greater potential for over-fitting as it is more susceptible to changes in the data (think low bias but high variance). Larger values of K means the model will be looking at potentially irrelevant data points. This can be helpgul when data are noisy, but not always. Think high bias, and low variance.</p></li>
+<li><p>The weight_func determines how to weight the distances between samples. In other words, it determines whether or not to penalize for a point being farther away.</p></li>
+<li><p>The dist_power function specifies how far points should be.</p></li>
+</ul>
+<h5 id="here-we-set-each-of-these-parameters-to-tune-so-that-the-model-could-determine-the-best-values-based-on-the-data.">Here, we set each of these parameters to ‘tune()’, so that the model could determine the best values based on the data.</h5>
+<div class="layout-chunk" data-layout="l-body">
+<pre class="r"><code>
+#knn_mod &lt;- nearest_neighbor()  %&gt;%
+#  set_engine(&quot;kknn&quot;) %&gt;% 
+#  set_mode(&quot;regression&quot;) %&gt;% 
+  set_args(neighbors = tune()),
+           weight_func = tune(),
+           dist_power = tune())</code></pre>
+</div>
+<h5 id="unfortunately-setting-all-three-parameters-to-tune-was-computationally-inefficient.-that-is-it-took-longer-than-16-hours-to-run-on-a-cluster-computer.-so-we-removed-the-tuning-parameters-for-weight_func-and-dist_power-and-left-these-to-the-defaults.-we-felt-it-was-important-to-tune-the-neighbors-however.">Unfortunately, setting all three parameters to ‘tune()’ was computationally inefficient. That is, it took longer than 16 hours to run on a cluster computer. So, we removed the tuning parameters for ‘weight_func’ and ‘dist_power’, and left these to the defaults. We felt it was important to tune the neighbors however.</h5>
 <div class="layout-chunk" data-layout="l-body">
 <pre class="r"><code>
 knn_mod &lt;- nearest_neighbor()  %&gt;%
   set_engine(&quot;kknn&quot;) %&gt;% 
   set_mode(&quot;regression&quot;) %&gt;% 
-  set_args(neighbors = tune())
-
-#had to take out other tuning parameters due to run times &gt; 16 hours on talapas (e.g., weight_func = tune(), dist_power = tune()))</code></pre>
+  set_args(neighbors = tune())#,
+           #weight_func = tune()#,
+           #dist_power = tune())</code></pre>
 </div>
-Create a workflow
+<h5 id="woohoo-model-specified-now-to-create-a-workflow-and-start-running-things.-here-we-use-a-workflow-to-bundle-our-preprocessing-and-modelling-together.-were-using-the-same-recipe-as-before-rec_yoself-and-the-model-we-just-created-knn_mod.">Woohoo! Model = specified! Now to create a workflow and start running things. Here we use a workflow to bundle our preprocessing and modelling together. We’re using the same recipe as before, ‘rec_yoself’, and the model we just created, ‘knn_mod’.</h5>
 <div class="layout-chunk" data-layout="l-body">
 <pre class="r"><code>
 knn_flo &lt;- workflow() %&gt;% 
   add_recipe(rec_yoself) %&gt;% 
   add_model(knn_mod)</code></pre>
 </div>
-Set grid
+#### We aimed to use a space-filling design when specifying our non-regular grid. This type of design aims to keep potential points away from each other while also encompassing the entire parameter space. Here, we specify the parameters, as well as the range for neighbors, prior to creating the grid. (*Note - this is prior to removing the tuning parameters above)
 <div class="layout-chunk" data-layout="l-body">
 <pre class="r"><code>
-#had to take out due to computation
+knn_par &lt;- parameters(neighbors(range = (c(10, 75))), weight_func(), dist_power()) #testing with smaller range due to computation
+knn_grd &lt;- grid_max_entropy(knn_par, size = 30)</code></pre>
+</div>
+<h5 id="unfortunately-this-too-contributed-to-a-computationally-inefficient-model.-so-we-used-the-defaults-for-grid_max_entropy-and-only-specified-neighbors-and-size-of-the-grid.">Unfortunately, this too contributed to a computationally inefficient model. So, we used the defaults for ‘grid_max_entropy’ and only specified neighbors and size of the grid.</h5>
+<div class="layout-chunk" data-layout="l-body">
+<pre class="r"><code>
 #knn_par &lt;- parameters(neighbors(range = (c(10, 75))), weight_func(), dist_power()) #testing with smaller range due to computation
 knn_grd &lt;- grid_max_entropy(neighbors(), size = 30) #testing with smaller size due to computation </code></pre>
 </div>
-Tune grid
+<h5 id="finally-we-are-ready-to-tune-our-grid-according-to-our-cross-fold-validated-data.-we-specify-our-workflow-knn_flo-the-resamples-we-want-the-model-to-use-train_cv-and-the-grid-we-created-above-knn_grd.">Finally, we are ready to tune our grid according to our cross-fold validated data. We specify our workflow (knn_flo), the resamples we want the model to use (train_cv), and the grid we created above (knn_grd).</h5>
+<h5 id="youll-notice-in-between-the-hashtags-we-include-some-code-to-employ-parallel-processing.-this-allows-the-model-to-run-on-each-sample-simultaneously-in-an-attempt-to-cut-down-on-computation-time.">You’ll notice in between the hashtags, we include some code to employ parallel processing. This allows the model to run on each sample simultaneously, in an attempt to cut down on computation time.</h5>
 <div class="layout-chunk" data-layout="l-body">
 <pre class="r"><code>
+#
 cl &lt;- makePSOCKcluster(all_cores)
 registerDoParallel(cl)
 foreach::getDoParWorkers()
 clusterEvalQ(cl, {library(tidymodels)})
+#
 
-tictoc::tic()
 knn_res &lt;- tune::tune_grid(knn_flo, resamples = train_cv, grid = knn_grd,
                            control = tune::control_resamples(save_pred = TRUE))
-parallel::stopCluster(cl)
-tictoc::toc()
 
-#1772.517 sec elapsed - from talapas - over 16 hours with all tuning parameters</code></pre>
+#
+parallel::stopCluster(cl)
+#</code></pre>
 </div>
-<p>Select the best tuning parameters and use them to finalize the workflow.</p>
-<ul>
-<li>Final parameters chosen (after tuning/selecting best) - 10 neighbors (others are default due to computation time)
+<h5 id="lastly-we-want-to-select-the-best-tuning-parameters-and-use-them-to-finalize-the-workflow.-as-you-may-have-guessed-the-only-tuned-parameters-are-the-number-of-neighbors---since-both-the-dist_func-and-weight_func-were-too-computationally-expensive-to-move-away-from-defaults.-the-optimal-number-of-neighbors-for-our-model-was-10.">Lastly, we want to select the best tuning parameters and use them to finalize the workflow. As you may have guessed, the only tuned parameters are the number of neighbors - since both the dist_func and weight_func were too computationally expensive to move away from defaults. The optimal number of neighbors for our model was <code>10</code>.</h5>
 <div class="layout-chunk" data-layout="l-body">
-</li>
-</ul>
 <pre class="r"><code>
 knn_best &lt;- knn_res %&gt;% 
   select_best(metric = &quot;rmse&quot;)
 
-knn_flo_final &lt;- finalize_workflow(knn_flo, knn_best)</code></pre>
-</div>
-<div class="layout-chunk" data-layout="l-body">
-<pre class="r"><code>
+knn_flo_final &lt;- finalize_workflow(knn_flo, knn_best)
+
 registerDoSEQ() 
 knn_final_res &lt;- last_fit(
   knn_flo_final,
@@ -1140,7 +1171,14 @@ knn_final_res &lt;- last_fit(
 knn_final_res %&gt;%
   collect_metrics()</code></pre>
 </div>
-<h1 id="model-3-lost-in-the-forest---random-forest-jp">Model 3: Lost in the Forest - Random Forest (JP)]</h1>
+<div class="layout-chunk" data-layout="l-body">
+
+</div>
+<p>As you can see, our final performance metric (RMSE) for our penalized regression model is <code>89.03</code>.</p>
+<div class="layout-chunk" data-layout="l-body">
+
+</div>
+<h1 id="model-3-lost-in-the-forest---random-forest-jp">Model 3: Lost in the Forest - Random Forest (JP)</h1>
 <p>Final parameters chosen (after tuning/selecting best) - mtry = 5, min_n = 40, trees = 1000</p>
 <p>13919.058 sec elapsed - from talapas</p>
 <h3 id="modified-recipe-to-increase-predictive-performance-jp">Modified recipe to increase predictive performance (JP)</h3>
