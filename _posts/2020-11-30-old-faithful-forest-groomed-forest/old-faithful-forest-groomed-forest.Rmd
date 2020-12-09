@@ -19,15 +19,11 @@ library(tidymodels)
 
 # Overview
 
-+ Models were all ran with 1% of training data 
+In this post we are going to describe our process for the three machine learning models that we ran (e.g., penalized regression, k-nearest neighbor, random forest) and compare the performance of all models. The results that are presented are from the full dataset described in the previous post. Since the full dataset was so large, we utilized a High Performance Computing (HPC) cluster from the University of Oregon (Talapas) to run all models. 
 
-+ Run 3 different models and compare 
+## Split the Data 
 
-# Model 1: Old Faithful - Penalized Regression (ST)
-
-### Splitting Data (same for all models)
-
-+ splits and cv object
+Before we start fitting models, the first step is to split our data into two parts: training and testing data. To do this, we use `initial_split` to split the data and then define our training and testing set. Notice that we also used stratified sampling (`strata = "score"`) when splitting our data to ensure the training and testing sets have similar outcome responses.
 
 ```{r splits, echo=TRUE}
 set.seed(1272020)
@@ -36,17 +32,24 @@ d_split <- initial_split(d, strata = "score")
 
 d_train <- training(d_split)
 d_test  <- testing(d_split)
+```
+
+Then, we take our testing set and create a k-fold cross validation object. This splits our training set into 10 different samples of data each with their own training and testing set. We will use this object to evaluate the performance metrics for each model across all 10 samples.
+
+```{r cv, echo=TRUE}
+set.seed(1272020)
+
 train_cv <- vfold_cv(d_train, strata = "score")
 ```
 
 
-### Recipe (same for all models)
+## Define the Recipe 
 
-Note: described in data description (link to post), code is copied here for completeness/reproducibility 
+This recipe is explained in the previous post. However, we provided the code here as well for completeness. We will use this same recipe for all models. 
 
 ```{r recipe-for-all}
 rec_yoself <- recipe(score ~ .,data = d_train) %>%
-  step_mutate(tst_dt = as.numeric(lubridate::mdy_hms(tst_dt))) %>% #had  to add as.numeric to recipe to make xgboost model run
+  step_mutate(tst_dt = as.numeric(lubridate::mdy_hms(tst_dt))) %>% 
   update_role(contains("id"), ncessch, new_role = "id vars") %>%
   step_unknown(all_nominal()) %>% 
   step_novel(all_nominal()) %>% 
@@ -55,59 +58,28 @@ rec_yoself <- recipe(score ~ .,data = d_train) %>%
   step_normalize(all_numeric(), -all_outcomes(), -has_role("id vars")) %>%
   step_medianimpute(all_numeric(), -all_outcomes(), -has_role("id vars")) %>%  
   step_interact(terms = ~lat:lon) %>% 
-  step_nzv(all_predictors()) #added due to error in xg boost about constant variables with 0sd
+  step_nzv(all_predictors())
 ```
 
 
-### Penalized Regression Model
+# Model 1: Old Faithful - Penalized Regression Model
+
+Finally, we are ready to create our first model. This will be a penalized regression, specifically an elastic net model. Linear regression models are usually easier to interpret and less computationally intensive. 
+
+To run an enet model, you must specify the penalty argument (for dealing with multicolinearity) and the mixture argument (proportion of ridge [0] to lasso [1] models). For our purposes, we will tune these parameters to find the values that result in the best model performance. 
 
 ```{r lrmod}
 lr_mod <- linear_reg()  %>%
   set_engine("glmnet") %>% 
   set_mode("regression") %>% 
-  set_args(penalty = tune(), #take out for tutorial, add in next step
+  set_args(penalty = tune(),
            mixture = tune())
 
 ```
 
+### Workflow
 
-### Tuning Hyperparameters
-
-```{r lr-mod}
-lr_mod <- linear_reg()  %>%
-  set_engine("glmnet") %>% 
-  set_mode("regression") %>% 
-  set_args(penalty = tune(), #tune
-           mixture = tune())
-
-```
-
-### Model Results
-
-```{r import-Rds, eval = TRUE}
-lr_rds <- readRDS("model1-lr.Rds")
-
-lr_rds %>%  
-  collect_metrics() %>% 
-  filter(`.metric` == "rmse")
-
-lr_rds %>%  
-  collect_metrics()
-
-lr_rds %>%  
-  show_best(metric = "rmse")
-
-# wrkfl %>% 
-#   pull_workflow_spec()
-# 
-# wrkfl <- workflow(wrkfl)
-# 
-# lr_rds$.workflow
-# #$fit$spec$args
-```
-
-
-#### Workflow
+After specifying our enet model, we use the `workflow` package to combine our recipe and our model into one workflow object. This makes it easier to monitor and update your recipe and model that you are working with.
 
 ```{r lr-flo}
 lr_flo <- workflow() %>% 
@@ -118,15 +90,13 @@ lr_flo <- workflow() %>%
 
 #### Tune Model
 
-best tuning results from model tuning on Talapas: Penalty = 0.0000000001, Mixture = 0.0345
-Took 1,552.90 seconds to tune on talapas
+We are now ready to tune our enet model. To tune the model we first need to create a grid for tuning parameters. Since we are using a linear regression model, we decided to use a regular grid with our two hyperparameters (`penalty()` and `mixture()`). We also specified 30 levels (i.e., 30 values for each hyperparameter) to create the grid.
 
 ```{r tune-lr}
-#grid
+#create grid
 lr_grd <- grid_regular(penalty(), mixture(), levels = 30)
 
 #tune model 
-
 tictoc::tic()
 lr_res <- tune::tune_grid(lr_flo, resamples = train_cv, grid = lr_grd,
                            control = tune::control_resamples(save_pred = TRUE))
@@ -134,23 +104,31 @@ tictoc::toc()
 
 ```
 
+When we ran the previous model on the HPC cluster, it only took 26 minutes to tune. The values that lead to the highest performance (i.e., lowest RMSE) for our tuning parameters were: 
+
++ Penalty = <0.00
+
++ Mixture =  0.03
+
+Note: Because both values are so low, we would expect to get very similar results with a ridge regression model and it would be less computationally intensive. 
+
 #### Apply Best Tuning Parameters
+
+We can then apply these values to our arguments in our model with the select `select_best` function. Remember to update and finalize your workflow with the new model as well. 
 
 ```{r best-lr}
 #select best tuning parameters
 lr_best <- lr_res %>% 
   select_best(metric = "rmse")
 
-lr_best
-
 #finalize model in workflow
 lr_flo_final <- finalize_workflow(lr_flo, lr_best)
 
 ```
 
-#### Final Fit
+### Model 1 Results
 
-#### This will automatically train the model specified by the workflow using the training data, and produce evaluations based on the test set.
+Once we have finalized our model and workflow, we can use the `last_fit()` function to apply our recipe and model to the `initial_split` object we made. This will evaluate the model performance on the testing set. We then use the `collect_metrics()` function to view our performance metrics on the test set.
 
 ```{r lr-fit}
 #evaluate on test set with last_fit
@@ -158,19 +136,39 @@ lr_final_res <- last_fit(
   lr_flo_final,
   split = d_split)
 
+#view performance metric
 lr_final_res %>%
-  collect_metrics()
+  collect_metrics() %>% 
+  filter(`.metric` == "rmse")
+
 ```
+
+```{r import-Rds, eval = TRUE, echo = FALSE}
+lr_rds <- readRDS("model1-lr.Rds") #final fit object
+
+lr_rds %>%  
+  collect_metrics() %>% 
+  filter(`.metric` == "rmse")
+
+# wrkfl %>% 
+#   pull_workflow_spec()
+# 
+# wrkfl <- workflow(wrkfl)
+# 
+# lr_rds$.workflow
+# #$fit$spec$args
+```
+
+As you can see, our final performance metric (RMSE) for our penalized regression model is `89.03`. 
 
 #### Get Predictions
 
+We also wanted to note that if you wanted to extract predictions from the test dataset within the split object (e.g., `d_split`), you can use the `collect_predictions()` function. However, our goal is to compare this model performance with two different models and then extract predictions from the best one. 
+
 ```{r lr-pred}
-#get predictions from test set (within split object)
 test_preds <- lr_final_res %>% collect_predictions()
 test_preds
-
 ```
-
 
 # Model 2: Meet the Neighbors - K Nearest Neighbor (KNN) (AN)
 
