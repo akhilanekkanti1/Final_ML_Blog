@@ -40,7 +40,7 @@ dictionary <- rio::import(here::here('data', 'data_dictionary.csv'))
 # install.packages("kableExtra")
 library(kableExtra)
 
-kbl(dictionary) %>% 
+kableExtra::kbl(dictionary) %>% 
   kable_paper(full_width = FALSE) %>% 
   column_spec(1, bold = TRUE, border_right = TRUE) %>% 
   column_spec(2)
