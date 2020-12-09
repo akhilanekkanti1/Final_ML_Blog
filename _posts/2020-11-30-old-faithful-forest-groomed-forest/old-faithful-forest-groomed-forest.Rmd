@@ -13,6 +13,8 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, eval=FALSE)
+library(tidyverse)
+library(tidymodels)
 ```
 
 # Overview
@@ -57,7 +59,7 @@ rec_yoself <- recipe(score ~ .,data = d_train) %>%
 ```
 
 
-### Linear Regression Model (penalized?)
+### Penalized Regression Model
 
 ```{r lrmod}
 lr_mod <- linear_reg()  %>%
@@ -82,6 +84,23 @@ lr_mod <- linear_reg()  %>%
 
 ### Model Results
 
+```{r import-Rds, eval = TRUE}
+lr_rds <- readRDS("model1-lr.Rds")
+
+lr_rds %>%  
+  collect_metrics() %>% 
+  filter(`.metric` == "rmse")
+
+lr_rds %>%  
+  collect_metrics()
+
+lr_rds %>%  
+  show_best(metric = "rmse") 
+
+lr_rds$.workflow
+```
+
+
 #### Workflow
 
 ```{r lr-flo}
@@ -92,6 +111,9 @@ lr_flo <- workflow() %>%
 ```
 
 #### Tune Model
+
+best tuning results from model tuning on Talapas: Penalty = 0.0000000001, Mixture = 0.0345
+Took 1,552.90 seconds to tune on talapas
 
 ```{r tune-lr}
 #grid
@@ -106,7 +128,7 @@ tictoc::toc()
 
 ```
 
-#### Select Best Tuning Parameters
+#### Apply Best Tuning Parameters
 
 ```{r best-lr}
 #select best tuning parameters
