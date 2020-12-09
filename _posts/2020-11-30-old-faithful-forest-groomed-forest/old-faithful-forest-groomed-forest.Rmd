@@ -19,7 +19,7 @@ library(tidymodels)
 
 # Overview
 
-In this post we are going to describe our process for the three machine learning models that we ran (e.g., penalized regression, k-nearest neighbor, random forest) and compare the performance of all models. The results that are presented are from the full dataset described in the previous post. Since the full dataset was so large, we utilized a High Performance Computing (HPC) cluster from the University of Oregon (Talapas) to run all models. 
+In this post we are going to describe our process for the three machine learning models that we ran (e.g., penalized regression, k-nearest neighbor, random forest) and compare the performance of all models. The results that are presented are from the full dataset described in the previous post. [Check it out here.](https://akhilanekkanti1.github.io/Final_ML_Blog/posts/2020-11-30-shoe-me-what-youre-working-with-data-desc/). Since the full dataset was so large, we utilized a High Performance Computing (HPC) cluster from the University of Oregon (Talapas) to run all models. 
 
 ## Split the Data 
 
@@ -174,7 +174,7 @@ test_preds
 
 #### We'll use the same data and recipe from our first Model - This way, we can see whether improvements to model fit are actually due to an improved model. 
 
-##### A K nearest neighbor (KNN) model aims to find the closest *neighbors*, or closest data points in the predictor space. This means that the model uses information from previous samples to find the points that are closest in proximity to the new sample. While KNN models can be computationally inefficient, they make fewer assumptions about the data and may be preferable when datasets are nonparametric, or where distributions are largely unknown.
+##### A K nearest neighbor (KNN) model aims to find the closest *neighbors*, or closest data points in the predictor space. This means that the model uses information from previous samples to find the points that are closest in proximity to the new sample. While KNN models can be computationally inefficient, they make fewer assumptions about the data and may be preferable when datasets are nonparametric, or where distributions are largely unknown. We chose this model for our case because many of our predictors are non-parametric and our dataset is very large.
 
 ```{r}
 knn_mod <- nearest_neighbor()  %>%
@@ -182,13 +182,14 @@ knn_mod <- nearest_neighbor()  %>%
 ```
 
 ##### When specifying the model, we set the mode to "regression". This tells it to take the average outcome of *K* cases, rather than the mode. Because our outcome is continuous, we went with the regression method.
+
 ```{r}
 #knn_mod <- nearest_neighbor()  %>%
 #  set_engine("kknn") %>% 
   set_mode("regression") %>%
 ```
 
-#### Next we determine how to identify the neighbors. The defaults from {kknn} include 5 neighbors, set the 'weight function' to "optimal", and the 'dist_power' to 2. 
+#### Next we determine how to identify the neighbors. The defaults from the `{kknn}` package include 5 neighbors, set the `weight_func` to "optimal", and the `dist_power()` to "2". 
 
 * If K is small (e.g., 1), there is greater potential for over-fitting as it is more susceptible to changes in the data (think low bias but high variance). Larger values of K means the model will be looking at potentially irrelevant data points. This can be helpgul when data are noisy, but not always. Think high bias, and low variance. 
 
@@ -219,6 +220,7 @@ knn_mod <- nearest_neighbor()  %>%
 ```
 
 ##### Woohoo! Model = specified! Now to create a workflow and start running things. Here we use a workflow to bundle our preprocessing and modelling together. We're using the same recipe as before, 'rec_yoself', and the model we just created, 'knn_mod'.
+
 ```{r}
 
 knn_flo <- workflow() %>% 
@@ -234,7 +236,7 @@ knn_par <- parameters(neighbors(range = (c(10, 75))), weight_func(), dist_power(
 knn_grd <- grid_max_entropy(knn_par, size = 30)
 ```
 
-##### Unfortunately, this too contributed to a computationally inefficient model. So, we used the defaults for 'grid_max_entropy' and only specified neighbors and size of the grid.
+##### Unfortunately, this too contributed to a computationally inefficient model. So, we used the defaults for `grid_max_entropy()` and only specified `neighbors()` and size of the grid.
 
 ```{r}
 
@@ -276,29 +278,22 @@ knn_final_res <- last_fit(
 
 knn_final_res %>%
   collect_metrics()
+
 ```
 
+##### Since we ran our model on the HPC, we are reading in our model first. 
+
 ```{r eval = FALSE, echo = FALSE}
-knn_rds <- readRDS("model2-knn.Rds")
+
+knn_rds <- readRDS("C:/Users/acer/Desktop/Final_ML_Blog/_posts/2020-11-30-old-faithful-forest-groomed-forest/model2-knn.Rds")
 
 knn_rds %>%  
   show_best(metric = "rmse")
 
-# wrkfl %>% 
-#   pull_workflow_spec()
-# 
-# wrkfl <- workflow(wrkfl)
-# 
-# lr_rds$.workflow
-# #$fit$spec$args
 ```
 
-As you can see, our final performance metric (RMSE) for our penalized regression model is `89.03`. 
+##### Our final performance metric (RMSE) for our KNN regression model is `92.20`. Yikes! This metric is not so great, but our total elapsed time of 1772.517 seconds on a cluster computer is pretty amazing. The high RMSE may be due to our leaving in the defaults for `dist_power()` and `weight_func` when tuning our model. Next steps, if time allowed, would include tuning just the `weight_func`, and specifying a value for `dist_power` based on the Manhattan measure (since most of our predictors are categorical).
 
-```{r}
-
-
-```
 
 
 # Model 3: Lost in the Forest - Random Forest (JP)

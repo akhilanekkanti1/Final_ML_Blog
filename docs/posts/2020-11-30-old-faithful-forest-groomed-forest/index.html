@@ -50,7 +50,7 @@
 <!--/radix_placeholder_rmarkdown_metadata-->
   
   <script type="text/json" id="radix-resource-manifest">
-  {"type":"character","attributes":{},"value":["model1-lr.Rds","old-faithful-forest-groomed-forest_files/bowser-1.9.3/bowser.min.js","old-faithful-forest-groomed-forest_files/distill-2.2.21/template.v2.js","old-faithful-forest-groomed-forest_files/jquery-1.11.3/jquery.min.js","old-faithful-forest-groomed-forest_files/webcomponents-2.0.0/webcomponents.js"]}
+  {"type":"character","attributes":{},"value":["model1-lr.Rds","model2-knn.Rds","old-faithful-forest-groomed-forest_files/bowser-1.9.3/bowser.min.js","old-faithful-forest-groomed-forest_files/distill-2.2.21/template.v2.js","old-faithful-forest-groomed-forest_files/jquery-1.11.3/jquery.min.js","old-faithful-forest-groomed-forest_files/webcomponents-2.0.0/webcomponents.js"]}
   </script>
   <!--radix_placeholder_navigation_in_header-->
 
@@ -1314,7 +1314,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <div class="d-article">
 <h1 id="overview">Overview</h1>
-<p>In this post we are going to describe our process for the three machine learning models that we ran (e.g., penalized regression, k-nearest neighbor, random forest) and compare the performance of all models. The results that are presented are from the full dataset described in the previous post. Since the full dataset was so large, we utilized a High Performance Computing (HPC) cluster from the University of Oregon (Talapas) to run all models.</p>
+<p>In this post we are going to describe our process for the three machine learning models that we ran (e.g., penalized regression, k-nearest neighbor, random forest) and compare the performance of all models. The results that are presented are from the full dataset described in the previous post. <a href="https://akhilanekkanti1.github.io/Final_ML_Blog/posts/2020-11-30-shoe-me-what-youre-working-with-data-desc/">Check it out here.</a>. Since the full dataset was so large, we utilized a High Performance Computing (HPC) cluster from the University of Oregon (Talapas) to run all models.</p>
 <h2 id="split-the-data">Split the Data</h2>
 <p>Before we start fitting models, the first step is to split our data into two parts: training and testing data. To do this, we use <code>initial_split</code> to split the data and then define our training and testing set. Notice that we also used stratified sampling (<code>strata = "score"</code>) when splitting our data to ensure the training and testing sets have similar outcome responses.</p>
 <div class="layout-chunk" data-layout="l-body">
@@ -1429,7 +1429,7 @@ test_preds</code></pre>
 </div>
 <h1 id="model-2-meet-the-neighbors---k-nearest-neighbor-knn-an">Model 2: Meet the Neighbors - K Nearest Neighbor (KNN) (AN)</h1>
 <h4 id="well-use-the-same-data-and-recipe-from-our-first-model---this-way-we-can-see-whether-improvements-to-model-fit-are-actually-due-to-an-improved-model.">We’ll use the same data and recipe from our first Model - This way, we can see whether improvements to model fit are actually due to an improved model.</h4>
-<h5 id="a-k-nearest-neighbor-knn-model-aims-to-find-the-closest-neighbors-or-closest-data-points-in-the-predictor-space.-this-means-that-the-model-uses-information-from-previous-samples-to-find-the-points-that-are-closest-in-proximity-to-the-new-sample.-while-knn-models-can-be-computationally-inefficient-they-make-fewer-assumptions-about-the-data-and-may-be-preferable-when-datasets-are-nonparametric-or-where-distributions-are-largely-unknown.">A K nearest neighbor (KNN) model aims to find the closest <em>neighbors</em>, or closest data points in the predictor space. This means that the model uses information from previous samples to find the points that are closest in proximity to the new sample. While KNN models can be computationally inefficient, they make fewer assumptions about the data and may be preferable when datasets are nonparametric, or where distributions are largely unknown.</h5>
+<h5 id="a-k-nearest-neighbor-knn-model-aims-to-find-the-closest-neighbors-or-closest-data-points-in-the-predictor-space.-this-means-that-the-model-uses-information-from-previous-samples-to-find-the-points-that-are-closest-in-proximity-to-the-new-sample.-while-knn-models-can-be-computationally-inefficient-they-make-fewer-assumptions-about-the-data-and-may-be-preferable-when-datasets-are-nonparametric-or-where-distributions-are-largely-unknown.-we-chose-this-model-for-our-case-because-many-of-our-predictors-are-non-parametric-and-our-dataset-is-very-large.">A K nearest neighbor (KNN) model aims to find the closest <em>neighbors</em>, or closest data points in the predictor space. This means that the model uses information from previous samples to find the points that are closest in proximity to the new sample. While KNN models can be computationally inefficient, they make fewer assumptions about the data and may be preferable when datasets are nonparametric, or where distributions are largely unknown. We chose this model for our case because many of our predictors are non-parametric and our dataset is very large.</h5>
 <div class="layout-chunk" data-layout="l-body">
 <pre class="r"><code>
 knn_mod &lt;- nearest_neighbor()  %&gt;%
@@ -1442,7 +1442,7 @@ knn_mod &lt;- nearest_neighbor()  %&gt;%
 #  set_engine(&quot;kknn&quot;) %&gt;% 
   set_mode(&quot;regression&quot;) %&gt;%</code></pre>
 </div>
-<h4 id="next-we-determine-how-to-identify-the-neighbors.-the-defaults-from-kknn-include-5-neighbors-set-the-weight-function-to-optimal-and-the-dist_power-to-2.">Next we determine how to identify the neighbors. The defaults from {kknn} include 5 neighbors, set the ‘weight function’ to “optimal”, and the ‘dist_power’ to 2.</h4>
+<h4 id="next-we-determine-how-to-identify-the-neighbors.-the-defaults-from-the-kknn-package-include-5-neighbors-set-the-weight_func-to-optimal-and-the-dist_power-to-2.">Next we determine how to identify the neighbors. The defaults from the <code>{kknn}</code> package include 5 neighbors, set the <code>weight_func</code> to “optimal”, and the <code>dist_power()</code> to “2”.</h4>
 <ul>
 <li><p>If K is small (e.g., 1), there is greater potential for over-fitting as it is more susceptible to changes in the data (think low bias but high variance). Larger values of K means the model will be looking at potentially irrelevant data points. This can be helpgul when data are noisy, but not always. Think high bias, and low variance.</p></li>
 <li><p>The weight_func determines how to weight the distances between samples. In other words, it determines whether or not to penalize for a point being farther away.</p></li>
@@ -1475,13 +1475,13 @@ knn_flo &lt;- workflow() %&gt;%
   add_recipe(rec_yoself) %&gt;% 
   add_model(knn_mod)</code></pre>
 </div>
-#### We aimed to use a space-filling design when specifying our non-regular grid. This type of design aims to keep potential points away from each other while also encompassing the entire parameter space. Here, we specify the parameters, as well as the range for neighbors, prior to creating the grid. (*Note - this is prior to removing the tuning parameters above)
+<h5 id="we-aimed-to-use-a-space-filling-design-when-specifying-our-non-regular-grid.-this-type-of-design-aims-to-keep-potential-points-away-from-each-other-while-also-encompassing-the-entire-parameter-space.-here-we-specify-the-parameters-as-well-as-the-range-for-neighbors-prior-to-creating-the-grid.-note---this-is-prior-to-removing-the-tuning-parameters-above">We aimed to use a space-filling design when specifying our non-regular grid. This type of design aims to keep potential points away from each other while also encompassing the entire parameter space. Here, we specify the parameters, as well as the range for neighbors, prior to creating the grid. (*Note - this is prior to removing the tuning parameters above)</h5>
 <div class="layout-chunk" data-layout="l-body">
 <pre class="r"><code>
 knn_par &lt;- parameters(neighbors(range = (c(10, 75))), weight_func(), dist_power()) #testing with smaller range due to computation
 knn_grd &lt;- grid_max_entropy(knn_par, size = 30)</code></pre>
 </div>
-<h5 id="unfortunately-this-too-contributed-to-a-computationally-inefficient-model.-so-we-used-the-defaults-for-grid_max_entropy-and-only-specified-neighbors-and-size-of-the-grid.">Unfortunately, this too contributed to a computationally inefficient model. So, we used the defaults for ‘grid_max_entropy’ and only specified neighbors and size of the grid.</h5>
+<h5 id="unfortunately-this-too-contributed-to-a-computationally-inefficient-model.-so-we-used-the-defaults-for-grid_max_entropy-and-only-specified-neighbors-and-size-of-the-grid.">Unfortunately, this too contributed to a computationally inefficient model. So, we used the defaults for <code>grid_max_entropy()</code> and only specified <code>neighbors()</code> and size of the grid.</h5>
 <div class="layout-chunk" data-layout="l-body">
 <pre class="r"><code>
 #knn_par &lt;- parameters(neighbors(range = (c(10, 75))), weight_func(), dist_power()) #testing with smaller range due to computation
@@ -1521,13 +1521,11 @@ knn_final_res &lt;- last_fit(
 knn_final_res %&gt;%
   collect_metrics()</code></pre>
 </div>
+<h5 id="since-we-ran-our-model-on-the-hpc-we-are-reading-in-our-model-first.">Since we ran our model on the HPC, we are reading in our model first.</h5>
 <div class="layout-chunk" data-layout="l-body">
 
 </div>
-<p>As you can see, our final performance metric (RMSE) for our penalized regression model is <code>89.03</code>.</p>
-<div class="layout-chunk" data-layout="l-body">
-
-</div>
+<h6 id="our-final-performance-metric-rmse-for-our-knn-regression-model-is-92.20.-yikes-this-metric-is-not-so-great-but-our-total-elapsed-time-of-1772.517-seconds-on-a-cluster-computer-is-pretty-amazing.-the-high-rmse-may-be-due-to-our-leaving-in-the-defaults-for-dist_power-and-weight_func-when-tuning-our-model.-next-steps-if-time-allowed-would-include-tuning-just-the-weight_func-and-specifying-a-value-for-dist_power-based-on-the-manhattan-measure-since-most-of-our-predictors-are-categorical.">Our final performance metric (RMSE) for our KNN regression model is <code>92.20</code>. Yikes! This metric is not so great, but our total elapsed time of 1772.517 seconds on a cluster computer is pretty amazing. The high RMSE may be due to our leaving in the defaults for <code>dist_power()</code> and <code>weight_func</code> when tuning our model. Next steps, if time allowed, would include tuning just the <code>weight_func</code>, and specifying a value for <code>dist_power</code> based on the Manhattan measure (since most of our predictors are categorical).</h6>
 <h1 id="model-3-lost-in-the-forest---random-forest-jp">Model 3: Lost in the Forest - Random Forest (JP)</h1>
 <p>Final parameters chosen (after tuning/selecting best) - mtry = 5, min_n = 40, trees = 1000</p>
 <p>13919.058 sec elapsed - from talapas</p>
