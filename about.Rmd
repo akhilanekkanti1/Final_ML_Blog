@@ -17,7 +17,7 @@ output:
 
 ### You can learn more about the data and the variables we used in our post titled, *"Shoe Me What You're Working With"*. Yes, the typo was intentional because humor is the only thing keeping us going, currently. 
 
-### Our second post, titled *"Old faithful, Neighborly Neighbors, and Random Forest"* describes each of our models, and identifies the best fitting model.
+### Our second post, titled *"Old faithful, Meet the Neighbors, and Lost in the Forest"* describes each of our models, and identifies the best fitting model.
 
 
 
