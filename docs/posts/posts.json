@@ -1,5 +1,21 @@
 [
   {
+    "path": "posts/2020-11-30-shoe-me-what-youre-working-with-data-desc/",
+    "title": "Show Me What You're Working With (Data Desc)",
+    "description": "Data description.",
+    "author": [
+      {
+        "name": "Jonathan Pedroza, Shaina Trevino, Akhila Nekkanti",
+        "url": "https://github.com/akhilanekkanti1/Final_ML_Blog"
+      }
+    ],
+    "date": "2020-12-01",
+    "categories": [],
+    "preview": "posts/2020-11-30-shoe-me-what-youre-working-with-data-desc/show-me-what-youre-working-with-data-desc_files/figure-html5/unnamed-chunk-6-1.png",
+    "last_modified": "2020-12-09T13:34:02-08:00",
+    "input_file": {}
+  },
+  {
     "path": "posts/2020-11-30-old-faithful-forest-groomed-forest/",
     "title": "Old Faithful, Forest, Groomed Forest",
     "description": "A short description of the post.",
@@ -13,22 +29,6 @@
     "categories": [],
     "preview": {},
     "last_modified": "2020-12-07T11:43:14-08:00",
-    "input_file": {}
-  },
-  {
-    "path": "posts/2020-11-30-shoe-me-what-youre-working-with-data-desc/",
-    "title": "Shoe Me What You're Working With (Data Desc)",
-    "description": "A short description of the post.",
-    "author": [
-      {
-        "name": "Akhila Nekkanti, Shaina Trevino, Jonathan Pedroza",
-        "url": "https://github.com/akhilanekkanti1/Final_ML_Blog"
-      }
-    ],
-    "date": "2020-11-30",
-    "categories": [],
-    "preview": "posts/2020-11-30-shoe-me-what-youre-working-with-data-desc/show-me-what-youre-working-with-data-desc_files/figure-html5/unnamed-chunk-5-1.png",
-    "last_modified": "2020-12-07T11:48:49-08:00",
     "input_file": {}
   }
 ]
