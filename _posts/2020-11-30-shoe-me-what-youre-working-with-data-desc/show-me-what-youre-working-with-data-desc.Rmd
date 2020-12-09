@@ -1,5 +1,5 @@
 ---
-title: "Shoe Me What You're Working With (Data Desc)"
+title: "Show Me What You're Working With (Data Desc)"
 description: |
   A short description of the post.
 author:
@@ -16,11 +16,14 @@ knitr::opts_chunk$set(eval = TRUE, echo = FALSE)
 library(tidyverse)
 library(tidymodels)
 library(rio)
+
 ```
 
 ## Let's work with some data
 
-In order to start building our models, we need to first start off by loading some data. According to the competition, we are all using the same initial data. In the code chunk below, you can see that we loaded the data from our github page. You could also download the data directly from [kaggle.com](https://www.kaggle.com/c/edld-654-fall-2020/data) at the competition page. Thankfully for this competition there is also a data dictionary that provides details about the variables in the dataset. Variables consist of school data from grades 3-8 and includes some basic demographic information of students, such as race/ethnicity and sex. There are also several id variables including the `attnd_schl_inst_id` and the `ncessch` variables, which are the Oregon Department of Education (ODE) assigned institution identifier for the attending school and the National Center for Education Statistics (NCES) school identifier. These two id variables were useful for being able to join this dataset with additional datasets used. 
+In order to start building our models, we need to first start off by loading some data. If you want all the code necessary for the data preparation, recipe, or models, you can find it [here](https://github.com/akhilanekkanti1/Final_ML_Blog) in the posts folder. According to the competition, we are all using the same initial data. The competition's training and test datasets were downloaded from github; however, you could also download the data directly from [kaggle.com](https://www.kaggle.com/c/edld-654-fall-2020/data) at the competition page. Thankfully for this competition there is also a data dictionary that provides details about the variables in the dataset. If you find yourself unsure about anything that we did in this blog post our the following model building post, there is a table below of the variables that were included in the competition's dataset. Any additional variables that were utilized in the models will have descriptions below. 
+
+Variables in this competition dataset consist of school data from grades 3-8 and includes some basic demographic information of students, such as race/ethnicity and sex. There are also several id variables including the `attnd_schl_inst_id` and the `ncessch` variables, which are the Oregon Department of Education (ODE) assigned institution identifier for the attending school and the National Center for Education Statistics (NCES) school identifier. These two id variables were useful for being able to join this dataset with additional datasets used. 
 
 ```{r}
 #code used in talapas
@@ -31,7 +34,20 @@ train <- read_csv("https://raw.githubusercontent.com/akhilanekkanti1/Final_ML_Bl
 
 ```
 
-Now that we have our competition data loaded, we will also add some additional sources of data. Additional sources of data will be helpful in making a better performing model. Data was joined from additional sources, such as the [NCES's website](https://nces.ed.gov/ccd/ccddata.asp). Some variables that were of specific interest for our models of predicting students' scores were the amount of students that that qualified for free lunch or for reduced-price lunch programs. We also collected data on the amount of students for each school. We can then join these two datasets together to create what we have labeled as `frl_stu`. Together the data on students that qualified for free or reduced-price lunch and the student counts were used to calculate the proportion of students that received free or reduced-price lunch for each school.
+```{r}
+dictionary <- rio::import(here::here('data', 'data_dictionary.csv'))
+
+# install.packages("kableExtra")
+library(kableExtra)
+
+kbl(dictionary) %>% 
+  kable_paper(full_width = FALSE) %>% 
+  column_spec(1, bold = TRUE, border_right = TRUE) %>% 
+  column_spec(2)
+```
+
+
+Now that we have our competition data loaded, we will also add some additional sources of data. Additional sources of data will be helpful in making a better performing model. Data was joined from additional sources, such as the [NCES's website](https://nces.ed.gov/ccd/ccddata.asp). Some variables that were of specific interest for our models of predicting students' scores were the amount of students that  qualified for free lunch or for reduced-price lunch programs. We also collected data on the amount of students for each school. We then joined these two datasets together to create what we have labeled as `frl_stu`. With the NCES data on the amount of students using free or reduced-lunch programs and the total amount of students per schools, we were able to collect some proportions of students that are utilizing these services out of the total school population. For reduced lunch proportions, we named that variable `rl_prop` and for free lunch proportions, we named that variable `fl_prop`. 
 
 ```{r}
 #edited (could export and then import that csv if needed)
@@ -60,7 +76,7 @@ frl_stu <- frl_stu %>% mutate(fl_prop = free_lunch_qualified/n,
 
 ```
 
-We were also interested in the makeup of these schools so we gathered some additional data on percentage of racial/ethnic groups at each school as well as teachers' pay. While the competition dataset had a variable of race/ethnicity variable (`ethnic_cd`), we wanted to collect data on the percentages of these groups as well. Lastly, we joined these two new datasets with the `frl_stu` dataset and the competition dataset. The final two pieces of code are for you to follow along get the same results as us and to only collect a small sample of the data so your computer doesn't fail you.
+We were also interested in the makeup of these schools so we gathered some additional data on percentage of racial/ethnic groups at each school as well as teachers' pay. While the competition dataset had a race/ethnicity variable (`ethnic_cd`), we wanted to collect data on the percentages of these groups as well in each school. These variables provided percentages of students from several races/ethnicites, including students that identified as American Indian/Alaska Native, Asian, Native Hawaiian/Pacific Islander, Black/African American, Hispanic/Latino, White, and Multiracial. We also joined another dataset from NCES on teachers pay to see if that would be a good predictor of students' score. Lastly, we joined these two new datasets with the `frl_stu` dataset and the competition dataset. We also decided to only use 1% of the data that we joined to your computer shouldn't have issues computing the following recipe and models. We wouldn't want your computer to fail you.  
 
 ![park and rec computer](https://media.giphy.com/media/ktcUyw6mBlMVa/giphy.gif)
 
@@ -93,71 +109,123 @@ d <- train %>%
 set.seed(1272020)
 
 d <- d %>% sample_frac(.01) #added sample frac to run on local/knit
+
 ```
 
 ## Show me what you got! 
 
 ![Show me what you got](https://media.giphy.com/media/26DOs997h6fgsCthu/giphy.gif)
-Okay we got our data all set up, so let's first start off by examining the structure of our dataset. We can see that most of the data are either characters or numeric columns. Next, we can run some basic descriptive statistics. As we can see from the chart, these descriptives can only tell us so much so its always best to also visualize your data. 
+Okay we got our data all set up, so let's first start off by examining the structure of our dataset. We can see that most of the data are either characters (n = 28), numeric columns (n = 15), or id variables (n = 8). Those id variables will be important later on in our recipe. Next, we can run some basic descriptive statistics. As we can see from the chart, these descriptives can only tell us so much so its always best to also visualize your data. One thing to note from looking at the descriptive statistics is that many of the predictors are dichotomous variables. One variable that stands out is the `lang_cd` variable. With a minimum and maximum of 1, this variable does not have any variation. However, if we go back up to the list of variables, we can see that in the data dictionary, it indicates that a blank or NA value means that the test was administered in English. 
 
 ```{r}
-str(d)
+# str(d)
 
-psych::describe(d, na.rm = TRUE)
+options(scipen = 999)
+
+psych::describe(d, na.rm = TRUE)[c('n', 'mean', 'sd', 'min', 'max', 'skew', 'kurtosis')]
 ```
 
-Before we can visualize our data, we created a couple of functions to help us visualize all the variables we have in our object `d`. The first is to create a histogram of each numeric variable in our dataframe and the second is to examine a bar graph for the character variables. These functions also have some parameters for the plots we will create, such as the amount of bins for the histograms and the color and fill of each plot. We chose dodgerblue for two reasons:
+Before we can visualize our data, we created a couple of functions to help us visualize all the variables we have in our object `d`. The first is to create a histogram of each numeric variable in our dataframe and the second is to examine a bar graph for the character variables. These functions also have some parameters for the plots we will create, such as the amount of bins for the histograms to make the histograms easier to read and the color and fill of each plot. We chose dodgerblue for two reasons:
 
 1. World
 2. Champs
 
 ~![world champs](https://media.giphy.com/media/599pRNRXwudF8FwgV2/giphy.gif)
 
+
+
 ```{r echo = TRUE}
-
-
-
 
 hist_fun <- function(data, x){
   ggplot({{data}}, aes({{x}})) +
     geom_histogram(bins = 20, color = 'white',
-                   fill = 'dodgerblue') +
-    theme_minimal()
+                   fill = 'dodgerblue')
 }
 
 bar_fun <- function(data, x){
   ggplot({{data}}, aes({{x}})) +
-    geom_bar(color = 'white', fill = 'dodgerblue') +
-    theme_minimal()
+    geom_bar(color = 'white', fill = 'dodgerblue')
 }
 
-
-
+character_only <- d %>% 
+  dplyr::select(-id, -attnd_dist_inst_id, -attnd_schl_inst_id,
+                -partic_dist_inst_id, -partic_schl_inst_id,
+                -schid, -ncessch,
+                -tst_dt,
+                -sch_name) %>% 
+  dplyr::select_if(is.character)
 
 numeric_only <- d %>%
+  dplyr::select(-id, -attnd_dist_inst_id, -attnd_schl_inst_id,
+                -partic_dist_inst_id, -partic_schl_inst_id,
+                -schid, -ncessch,
+                -sch_name) %>% 
+  mutate(tst_dt = as.numeric(lubridate::mdy_hms(tst_dt))) %>% 
   dplyr::select_if(is.numeric)
 
-d_names <- names(d)
-d_names_num <- names(dplyr::select_if(d, is.numeric))
+d_names <- names(dplyr::select_if(character_only, is.character))
+
+d_names_num <- names(dplyr::select_if(numeric_only, is.numeric))
 
 map2(numeric_only, d_names_num, ~hist_fun(numeric_only, .x) +
       labs(title = glue::glue('Variable: {.y}')))
 
-map2(d, d_names, ~bar_fun(d, .x) +
+map2(character_only, d_names, ~bar_fun(character_only, .x) +
        labs(title = glue::glue('Variable: {.y}')))
+
 
 ```
 
+We can get a lot of information from the visualizations that may have been missed in the descriptive statistics. For example, we can see that there is some skewness in the distributions of some variables like the percentages of many of the racial/ethnic variables. These histograms also help in remembering that values in the descriptives may not need to be worried about such as the distributions of longitude and latitude. For the character variables, we see that many of the variables don't have an equal amount of values in the Yes and No categories. Once again this will be important when discussing our recipe. Other variables like `ayp_lep` (student who received services or was eligible to receive services in a Limited English Proficient program) show a lot of missing values. So we have a good idea of our data after conducting some descriptive statistics and looking at some basic visuals so that now means one thing.
 
-Now let's get to building our recipe and the models!
+Let's get to building our recipe!
 
-![moving forward with models](https://media.giphy.com/media/26gYOXsPBh3qv420E/giphy.gif)
+But before we get to that point, there is just one last thing to do. We need to split up our data. We do this because we want to have a dataset to try new things for our recipe and models before we make any predictions on unseen data. The main reason is that we want to reduce the possibility of leakage by having any part of our testing data, or the data we'll use to make predictions, intertwined into our training dataset. So we split our data into what we will use to practice with (training set) and then what we will use to make our predictions (testing set). We utilized the defaults to have 75% in our training set and 25% in the test set, but we did include the strata argument to equal `score` or the outcome we are interested in predicting. By including this argument, we will ensure that the distributions of our training and testing sets will be equal. We then conducted some cross validation by randomly splitting our training data into 10 folds. 
 
-## Note to put in recipe.
+```{r}
+set.seed(1272020)
+
+d_split <- initial_split(d, strata = "score")
+
+d_train <- training(d_split)
+d_test  <- testing(d_split)
+train_cv <- vfold_cv(d_train, strata = "score")
+```
+
+So now that we have our training set and our 10 folds, we can start on building our recipe. This may be arguably the most challenging part as the steps you take are important to the final recipe that you use for your models. So we'll take some time to discuss the steps taken because it can quickly get out of hand and then your recipe and your work station can become a mess.
+
+![practice makes perfect](https://media.giphy.com/media/xT0xePLIUyxnXso8co/giphy.gif)
+
+For the purposes of this post and the following model building post, we decided to create one recipe that we will use for all the models. We'll go down the steps of our recipe one-by-one.
+
+1. The first line is the formula that we used for our recipe. We decided to have the outcome of score be predicted by all the predictors that we have from the various datasets we joined earlier. This will also use the training set only because we don't want to have any leakage. We are using all the predictors to show all the additional steps. 
+
+2. Next, we want to treat the testing data variable as a numeric value. This was done because it was causing us issues in the model building phase.
+
+3. We also made sure to make all the variables that were some form of identification variable into id variables rather than keep them as numeric values. 
+
+4. step_unknown was used to assign missing categories to unknown for the variables that were factors, including the dichotomous variables and other categorical variables, like `ethnic_cd`. step_novel was used to then assign values to those categorical variables. 
+
+5. Then to be able to compare these categories, we dummy coded all categorical variables. 
+
+6. Next, we removed any predictors, including our now dummy coded variables that had any near-zero variance in all the predictors. Without any variation in the varible, it doesn't add much to the prediction of students' scores. 
+
+7. We then normalized, which centers and puts all our numeric values on the same scale. We made sure not to include id variables as well as the outcome of score. 
+
+8. Then any numeric predictors that had missing values were imputed using median imputation. Once again, we made sure to not impute the outcome as well as the id variables.
+
+9. To help in creating a better model, we decided to include an interaction between longitude and latitude as they are dependent on one another. 
+
+10. Lastly, we once again removed any predictors that had near zero variance. 
+
+![recipe in making](https://media.giphy.com/media/18e01OgZF2jjJWOMOu/giphy.gif)
+
+So is this the best recipe. No, probably not. Some things that we could have done was transform some of the variables that have some skewness issues as shown in our data visualizations. There could also have been opportunities to include additional interactions. But, even though we might say to not look at our recipe, it is still a recipe that can be used as a learning opportunity. 
 
 ```{r recipe-for-all-datadesc}
+
 rec_yoself <- recipe(score ~ .,data = d_train) %>%
-  step_mutate(tst_dt = as.numeric(lubridate::mdy_hms(tst_dt))) %>% #had  to add as.numeric to recipe to make xgboost model run
+  step_mutate(tst_dt = as.numeric(lubridate::mdy_hms(tst_dt))) %>% 
   update_role(contains("id"), ncessch, new_role = "id vars") %>%
   step_unknown(all_nominal()) %>% 
   step_novel(all_nominal()) %>% 
@@ -166,5 +234,9 @@ rec_yoself <- recipe(score ~ .,data = d_train) %>%
   step_normalize(all_numeric(), -all_outcomes(), -has_role("id vars")) %>%
   step_medianimpute(all_numeric(), -all_outcomes(), -has_role("id vars")) %>%  
   step_interact(terms = ~lat:lon) %>% 
-  step_nzv(all_predictors()) #added due to error in xg boost about constant variables with 0sd
+  step_nzv(all_predictors()) 
 ```
+
+Even if this recipe is not perfect, it is a working recipe so that is something to be proud of. Even you decide to build a better recipe then the only thing I can say is you're getting the hang of it.
+
+![moving forward with models](https://media.giphy.com/media/26gYOXsPBh3qv420E/giphy.gif)
