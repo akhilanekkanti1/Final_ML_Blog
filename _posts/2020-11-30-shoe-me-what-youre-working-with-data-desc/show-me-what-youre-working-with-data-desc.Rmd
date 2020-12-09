@@ -1,11 +1,11 @@
 ---
 title: "Shoe Me What You're Working With (Data Desc)"
 description: |
-  A short description of the post.
+  Data description.
 author:
-  - name: Akhila Nekkanti, Shaina Trevino, Jonathan Pedroza
+  - name: Jonathan Pedroza, Shaina Trevino, Akhila Nekkanti
     url: https://github.com/akhilanekkanti1/Final_ML_Blog
-date: 11-30-2020
+date: 12-01-2020
 output:
   distill::distill_article:
     self_contained: false

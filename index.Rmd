@@ -1,5 +1,5 @@
 ---
-title: "My Blog"
+title: "EDLD 654: Machine Learning Final"
 site: distill::distill_website
 listing: posts
 ---

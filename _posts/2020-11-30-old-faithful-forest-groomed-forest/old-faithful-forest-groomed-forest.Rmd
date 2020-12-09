@@ -1,9 +1,9 @@
 ---
-title: "Old Faithful, Meet the Neighbors, Lost in the Forest"
+title: "Old faithful, Neighborly Neighbors, and Random Forest"
 description: |
-  A short description of the post.
+  Model description and evaluation.
 author:
-  - name: Akhila Nekkanti, Shaina Trevino, Jonathan Pedroza
+  - name: Shaina Trevino, Jonathan Pedroza, Akhila Nekkanti
     url: https://github.com/akhilanekkanti1/Final_ML_Blog
 date: 11-30-2020
 output:
