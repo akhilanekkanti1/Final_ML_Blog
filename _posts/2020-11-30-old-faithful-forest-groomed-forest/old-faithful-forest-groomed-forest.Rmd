@@ -1,5 +1,5 @@
 ---
-title: "Old Faithful, Meet the Neighbors, Lost in the Forest"
+title: "Old faithful, Neighborly Neighbors, and Random Forest"
 description: |
   A short description of the post.
 author:
