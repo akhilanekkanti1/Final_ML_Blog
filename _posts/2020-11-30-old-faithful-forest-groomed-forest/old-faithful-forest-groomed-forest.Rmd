@@ -246,7 +246,7 @@ knn_grd <- grid_max_entropy(neighbors(), size = 30) #testing with smaller size d
 ##### Finally, we are ready to tune our grid according to our cross-fold validated data. We specify our workflow (knn_flo), the resamples we want the model to use (train_cv), and the grid we created above (knn_grd).
 
 ##### You'll notice in between the hashtags, we include some code to employ parallel processing. This allows the model to run on each sample simultaneously, in an attempt to cut down on computation time.  
-```{r}
+```{r echo = TRUE, eval = FALSE}
 #
 cl <- makePSOCKcluster(all_cores)
 registerDoParallel(cl)
@@ -398,11 +398,35 @@ However, it is important to note that while the random forest model was the best
 
 
 ```{r echo = FALSE, eval=FALSE}
-library(here)
-library(rio)
+
+
 test <- read_csv(here("data", "test.csv"),
                  col_types = cols(.default = col_guess(), 
                                   calc_admn_cd = col_character()))
+#joins - edited
+test1 <- test %>% 
+  left_join(frl_stu) %>% 
+  left_join(staff) %>% 
+  left_join(ethnicities) %>% 
+  sample_frac(.01)
+
+#workflow
+fit_workflow <- fit(train_wf_final, d)
+
+#use model to make predictions for test dataset
+preds_final <- predict(fit_workflow, test1)
+str(d)
+```
+
+```{r echo = FALSE, eval = TRUE}
+library(here)
+library(rio)
+library(dplyr)
+train <- read_csv(here("data","train.csv"),
+                       col_types = cols(.default = col_guess(), 
+                                        calc_admn_cd = col_character()))  %>% 
+  mutate(tst_dt = lubridate::mdy_hms(tst_dt))
+
 
 frl <- import("https://nces.ed.gov/ccd/Data/zip/ccd_sch_033_1718_l_1a_083118.zip",
               setclass = "tbl_df")  %>% 
@@ -447,36 +471,24 @@ staff <- import("https://raw.githubusercontent.com/akhilanekkanti1/Final_ML_Blog
   select(ncessch, schid, teachers) %>%
   mutate(ncessch = as.double(ncessch))
 
-#joins - edited
-test1 <- test %>% 
-  left_join(frl_stu) %>% 
-  left_join(staff) %>% 
-  left_join(ethnicities) %>% 
-  sample_frac(.01)
-
-train <- read_csv(here("data","train.csv"),
-                       col_types = cols(.default = col_guess(), 
-                                        calc_admn_cd = col_character()))  %>% 
-  select(-score) %>% 
-  mutate(tst_dt = lubridate::mdy_hms(tst_dt))
-
 d <- train %>% 
   left_join(frl_stu) %>% 
   left_join(staff) %>% 
   left_join(ethnicities)
+```
 
-#workflow
-fit_workflow <- fit(train_wf_final, d)
+```{r echo=FALSE, eval = TRUE}
 
-#use model to make predictions for test dataset
-preds_final <- predict(fit_workflow, test1)
-str(d)
+preds_m3 <- read_csv(here("data", "model3-rf-predictions.csv")) %>% 
+  as_tibble()
 
-pred_frame <- tibble(Id = test1$id, Predicted = preds_final$.pred)
+
+#pred_frame <- tibble(Id = test1$id, Predicted = preds_m3$.pred)
+
 
 ggplot() +
   geom_point(data = d, aes(id, score), color = '#D7126D', alpha = .5) +
-  geom_point(data = pred_frame, aes(Id, Predicted), color = '#12D7AD', alpha = .7) +
+  geom_point(data = preds_m3, aes(Id, Predicted), color = '#12D7AD', alpha = .7) +
   theme_minimal()
 
 ```
