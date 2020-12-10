@@ -365,7 +365,7 @@ Now that we have examined all three different models using a small percentage of
 
 ![best tree](https://media.giphy.com/media/ndOEKTqUOEPq8/giphy.gif)
 
-```{r}
+```{r echo = TRUE, eval= TRUE}
 model_metrics <- tibble('model' = c('Elastic Net Regression', 'KNN', 'Random Forest'),
                            'time' = c(1552.90, 1772.52, 13919.06),
                            'rmse' = c(89.02, 92.20, 85.50))
@@ -397,10 +397,55 @@ However, it is important to note that while the random forest model was the best
 4. Try to find as much relevant data as possible to help in predicting your outcome of interest.
 
 
-```{r}
-test <- read_csv("data/test.csv",
+```{r echo = FALSE, eval=FALSE}
+library(here)
+library(rio)
+test <- read_csv(here("data", "test.csv"),
                  col_types = cols(.default = col_guess(), 
                                   calc_admn_cd = col_character()))
+
+frl <- import("https://nces.ed.gov/ccd/Data/zip/ccd_sch_033_1718_l_1a_083118.zip",
+              setclass = "tbl_df")  %>% 
+  janitor::clean_names()  %>% 
+  filter(st == "OR")  %>%
+  select(ncessch, lunch_program, student_count)  %>% 
+  mutate(student_count = replace_na(student_count, 0))  %>% 
+  pivot_wider(names_from = lunch_program,
+              values_from = student_count)  %>% 
+  janitor::clean_names()  %>% 
+  mutate(ncessch = as.double(ncessch))
+
+stu_counts <- import("https://raw.githubusercontent.com/akhilanekkanti1/Final_ML_Blog/main/data/achievement-gaps-geocoded.csv",
+                     setclass = "tbl_df")  %>% 
+  filter(state == "OR" & year == 1718)  %>% 
+  count(ncessch, wt = n)  %>% 
+  mutate(ncessch = as.double(ncessch))
+
+frl_stu <- left_join(frl, stu_counts)
+
+frl_stu <- frl_stu %>% mutate(fl_prop = free_lunch_qualified/n,
+                              rl_prop = reduced_price_lunch_qualified/n) %>%
+  select(ncessch,fl_prop, rl_prop)
+
+or_schools <- readxl::read_xlsx(here::here("data", "fallmembershipreport_20192020.xlsx"),
+                                sheet = 4) 
+
+#tidy ethnicity data
+ethnicities <- or_schools %>% 
+  select(attnd_schl_inst_id = `Attending School ID`,
+         attnd_dist_inst_id = `Attending District Institution ID`, #included this to join by district along with school id
+         sch_name = `School Name`,
+         contains("%")) %>% 
+  janitor::clean_names()
+names(ethnicities) <- gsub("x2019_20_percent", "p", names(ethnicities))
+
+
+staff <- import("https://raw.githubusercontent.com/akhilanekkanti1/Final_ML_Blog/main/data/staff.csv",
+                setclass = "tbl_df") %>% 
+  janitor::clean_names() %>%
+  filter(st == "OR") %>%
+  select(ncessch, schid, teachers) %>%
+  mutate(ncessch = as.double(ncessch))
 
 #joins - edited
 test1 <- test %>% 
@@ -408,6 +453,17 @@ test1 <- test %>%
   left_join(staff) %>% 
   left_join(ethnicities) %>% 
   sample_frac(.01)
+
+train <- read_csv(here("data","train.csv"),
+                       col_types = cols(.default = col_guess(), 
+                                        calc_admn_cd = col_character()))  %>% 
+  select(-score) %>% 
+  mutate(tst_dt = lubridate::mdy_hms(tst_dt))
+
+d <- train %>% 
+  left_join(frl_stu) %>% 
+  left_join(staff) %>% 
+  left_join(ethnicities)
 
 #workflow
 fit_workflow <- fit(train_wf_final, d)
