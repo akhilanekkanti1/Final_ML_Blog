@@ -18,6 +18,73 @@
  <!--radix_placeholder_import_source-->
  <!--/radix_placeholder_import_source-->
 
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ad0000; } /* Alert */
+code span.an { color: #5e5e5e; } /* Annotation */
+code span.at { color: #20794d; } /* Attribute */
+code span.bn { color: #ad0000; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007ba5; } /* ControlFlow */
+code span.ch { color: #20794d; } /* Char */
+code span.cn { color: #8f5902; } /* Constant */
+code span.co { color: #5e5e5e; } /* Comment */
+code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+code span.dt { color: #ad0000; } /* DataType */
+code span.dv { color: #ad0000; } /* DecVal */
+code span.er { color: #ad0000; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #ad0000; } /* Float */
+code span.fu { color: #4758ab; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #5e5e5e; } /* Information */
+code span.kw { color: #007ba5; } /* Keyword */
+code span.op { color: #5e5e5e; } /* Operator */
+code span.ot { color: #007ba5; } /* Other */
+code span.pp { color: #ad0000; } /* Preprocessor */
+code span.sc { color: #20794d; } /* SpecialChar */
+code span.ss { color: #20794d; } /* SpecialString */
+code span.st { color: #20794d; } /* String */
+code span.va { color: #111111; } /* Variable */
+code span.vs { color: #20794d; } /* VerbatimString */
+code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+</style>
+
   <!--radix_placeholder_meta_tags-->
 <title>My Blog: Old faithful, Meet the Neighbors, and Lost in the Forest</title>
 
@@ -50,9 +117,10 @@
 <!--/radix_placeholder_rmarkdown_metadata-->
   
   <script type="text/json" id="radix-resource-manifest">
-  {"type":"character","attributes":{},"value":["model1-lr.Rds","model2-knn.Rds","old-faithful-forest-groomed-forest_files/bowser-1.9.3/bowser.min.js","old-faithful-forest-groomed-forest_files/distill-2.2.21/template.v2.js","old-faithful-forest-groomed-forest_files/jquery-1.11.3/jquery.min.js","old-faithful-forest-groomed-forest_files/webcomponents-2.0.0/webcomponents.js"]}
+  {"type":"character","attributes":{},"value":["model1-lr.Rds","model2-knn.Rds","old-faithful-forest-groomed-forest_files/anchor-4.2.2/anchor.min.js","old-faithful-forest-groomed-forest_files/bowser-1.9.3/bowser.min.js","old-faithful-forest-groomed-forest_files/distill-2.2.21/template.v2.js","old-faithful-forest-groomed-forest_files/jquery-1.11.3/jquery.min.js","old-faithful-forest-groomed-forest_files/webcomponents-2.0.0/webcomponents.js"]}
   </script>
   <!--radix_placeholder_navigation_in_header-->
+<meta name="distill:offset" content="../.."/>
 
 <script type="application/javascript">
 
@@ -64,6 +132,7 @@
     var header = $('header').get(0);
     var headerHeight = header.offsetHeight;
     var headroom = new Headroom(header, {
+      tolerance: 5,
       onPin : function() {
         if (window.headroom_prevent_pin) {
           window.headroom_prevent_pin = false;
@@ -112,7 +181,7 @@
 
 .distill-site-nav {
   color: rgba(255, 255, 255, 0.8);
-  background-color: #455a64;
+  background-color: #0F2E3D;
   font-size: 15px;
   font-weight: 300;
 }
@@ -175,6 +244,7 @@
 
 .distill-site-header .title {
   font-size: 18px;
+  min-width: 150px;
 }
 
 .distill-site-header .logo {
@@ -316,7 +386,7 @@
 
 
 @media screen and (max-width: 768px) {
-  .distill-site-header.responsive {position: relative;}
+  .distill-site-header.responsive {position: relative; min-height: 500px; }
   .distill-site-header.responsive a.nav-toggle {
     position: absolute;
     right: 0;
@@ -390,6 +460,258 @@ d-title {
 <link href="../../site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet"/>
 <link href="../../site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet"/>
 <script src="../../site_libs/headroom-0.9.4/headroom.min.js"></script>
+<script src="../../site_libs/autocomplete-0.37.1/autocomplete.min.js"></script>
+<script src="../../site_libs/fuse-6.4.1/fuse.min.js"></script>
+
+<script type="application/javascript">
+
+function getMeta(metaName) {
+  var metas = document.getElementsByTagName('meta');
+  for (let i = 0; i < metas.length; i++) {
+    if (metas[i].getAttribute('name') === metaName) {
+      return metas[i].getAttribute('content');
+    }
+  }
+  return '';
+}
+
+function offsetURL(url) {
+  var offset = getMeta('distill:offset');
+  return offset ? offset + '/' + url : url;
+}
+
+function createFuseIndex() {
+
+  // create fuse index
+  var options = {
+    keys: [
+      { name: 'title', weight: 20 },
+      { name: 'categories', weight: 15 },
+      { name: 'description', weight: 10 },
+      { name: 'contents', weight: 5 },
+    ],
+    ignoreLocation: true,
+    threshold: 0
+  };
+  var fuse = new window.Fuse([], options);
+
+  // fetch the main search.json
+  return fetch(offsetURL('search.json'))
+    .then(function(response) {
+      if (response.status == 200) {
+        return response.json().then(function(json) {
+          // index main articles
+          json.articles.forEach(function(article) {
+            fuse.add(article);
+          });
+          // download collections and index their articles
+          return Promise.all(json.collections.map(function(collection) {
+            return fetch(offsetURL(collection)).then(function(response) {
+              if (response.status === 200) {
+                return response.json().then(function(articles) {
+                  articles.forEach(function(article) {
+                    fuse.add(article);
+                  });
+                })
+              } else {
+                return Promise.reject(
+                  new Error('Unexpected status from search index request: ' +
+                            response.status)
+                );
+              }
+            });
+          })).then(function() {
+            return fuse;
+          });
+        });
+
+      } else {
+        return Promise.reject(
+          new Error('Unexpected status from search index request: ' +
+                      response.status)
+        );
+      }
+    });
+}
+
+window.document.addEventListener("DOMContentLoaded", function (event) {
+
+  // get search element (bail if we don't have one)
+  var searchEl = window.document.getElementById('distill-search');
+  if (!searchEl)
+    return;
+
+  createFuseIndex()
+    .then(function(fuse) {
+
+      // make search box visible
+      searchEl.classList.remove('hidden');
+
+      // initialize autocomplete
+      var options = {
+        autoselect: true,
+        hint: false,
+        minLength: 2,
+      };
+      window.autocomplete(searchEl, options, [{
+        source: function(query, callback) {
+          const searchOptions = {
+            isCaseSensitive: false,
+            shouldSort: true,
+            minMatchCharLength: 2,
+            limit: 10,
+          };
+          var results = fuse.search(query, searchOptions);
+          callback(results
+            .map(function(result) { return result.item; })
+            .filter(function(item) { return !!item.description; })
+          );
+        },
+        templates: {
+          suggestion: function(suggestion) {
+            var html = `
+              <div class="search-item">
+                <h3>${suggestion.title}</h3>
+                <div class="search-item-description">
+                  ${suggestion.description}
+                </div>
+                <div class="search-item-preview">
+                  <img src="${suggestion.preview ? offsetURL(suggestion.preview) : ''}"</img>
+                </div>
+              </div>
+            `;
+            return html;
+          }
+        }
+      }]).on('autocomplete:selected', function(event, suggestion) {
+        window.location.href = offsetURL(suggestion.path);
+      });
+      // remove inline display style on autocompleter (we want to
+      // manage responsive display via css)
+      $('.algolia-autocomplete').css("display", "");
+    })
+    .catch(function(error) {
+      console.log(error);
+    });
+
+});
+
+</script>
+
+<style type="text/css">
+
+/* Algolioa Autocomplete */
+
+.algolia-autocomplete {
+  display: inline-block;
+  margin-left: 10px;
+  vertical-align: sub;
+  background-color: white;
+  color: black;
+  padding: 6px;
+  padding-top: 8px;
+  padding-bottom: 0;
+  border-radius: 6px;
+  border: 1px #0F2E3D solid;
+  width: 180px;
+}
+
+
+@media screen and (max-width: 768px) {
+  .distill-site-nav .algolia-autocomplete {
+    display: none;
+    visibility: hidden;
+  }
+  .distill-site-nav.responsive .algolia-autocomplete {
+    display: inline-block;
+    visibility: visible;
+  }
+  .distill-site-nav.responsive .algolia-autocomplete .aa-dropdown-menu {
+    margin-left: 0;
+    width: 400px;
+    max-height: 400px;
+  }
+}
+
+.algolia-autocomplete .aa-input, .algolia-autocomplete .aa-hint {
+  width: 90%;
+  outline: none;
+  border: none;
+}
+
+.algolia-autocomplete .aa-hint {
+  color: #999;
+}
+.algolia-autocomplete .aa-dropdown-menu {
+  width: 550px;
+  max-height: 70vh;
+  overflow-x: visible;
+  overflow-y: scroll;
+  padding: 5px;
+  margin-top: 3px;
+  margin-left: -150px;
+  background-color: #fff;
+  border-radius: 5px;
+  border: 1px solid #999;
+  border-top: none;
+}
+
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion {
+  cursor: pointer;
+  padding: 5px 4px;
+  border-bottom: 1px solid #eee;
+}
+
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion:last-of-type {
+  border-bottom: none;
+  margin-bottom: 2px;
+}
+
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item {
+  overflow: hidden;
+  font-size: 0.8em;
+  line-height: 1.4em;
+}
+
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item h3 {
+  margin-block-start: 0;
+  margin-block-end: 5px;
+}
+
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item-description {
+  display: inline-block;
+  overflow: hidden;
+  height: 2.8em;
+  width: 80%;
+  margin-right: 4%;
+}
+
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item-preview {
+  display: inline-block;
+  width: 15%;
+}
+
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item-preview img {
+  height: 3em;
+  width: auto;
+  display: none;
+}
+
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item-preview img[src] {
+  display: initial;
+}
+
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion.aa-cursor {
+  background-color: #eee;
+}
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion em {
+  font-weight: bold;
+  font-style: normal;
+}
+
+</style>
+
+
 <!--/radix_placeholder_navigation_in_header-->
   <!--radix_placeholder_distill-->
 
@@ -413,6 +735,51 @@ body {
 
 .pagedtable-footer {
   font-size: 15px;
+}
+
+d-byline .byline {
+  grid-template-columns: 2fr 2fr;
+}
+
+d-byline .byline h3 {
+  margin-block-start: 1.5em;
+}
+
+d-byline .byline .authors-affiliations h3 {
+  margin-block-start: 0.5em;
+}
+
+.authors-affiliations .orcid-id {
+  width: 16px;
+  height:16px;
+  margin-left: 4px;
+  margin-right: 4px;
+  vertical-align: middle;
+  padding-bottom: 2px;
+}
+
+d-title .dt-tags {
+  margin-top: 1em;
+  grid-column: text;
+}
+
+.dt-tags .dt-tag {
+  text-decoration: none;
+  display: inline-block;
+  color: rgba(0,0,0,0.6);
+  padding: 0em 0.4em;
+  margin-right: 0.5em;
+  margin-bottom: 0.4em;
+  font-size: 70%;
+  border: 1px solid rgba(0,0,0,0.2);
+  border-radius: 3px;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+d-article table.gt_table td,
+d-article table.gt_table th {
+  border-bottom: none;
 }
 
 .html-widget {
@@ -454,6 +821,7 @@ body {
 }
 
 d-article {
+  padding-top: 2.5rem;
   padding-bottom: 30px;
 }
 
@@ -465,91 +833,48 @@ d-article>p>img {
   width: 100%;
 }
 
+d-article h2 {
+  margin: 1rem 0 1.5rem 0;
+}
+
+d-article h3 {
+  margin-top: 1.5rem;
+}
+
 d-article iframe {
   border: 1px solid rgba(0, 0, 0, 0.1);
   margin-bottom: 2.0em;
   width: 100%;
 }
 
-figure img.external {
-  background: white;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);
-  padding: 18px;
-  box-sizing: border-box;
+/* Tweak code blocks */
+
+d-article div.sourceCode code,
+d-article pre code {
+  font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
 }
 
-/* CSS for table of contents */
-
-.d-toc {
-  color: rgba(0,0,0,0.8);
-  font-size: 0.8em;
-  line-height: 1em;
+d-article pre,
+d-article div.sourceCode,
+d-article div.sourceCode pre {
+  overflow: auto;
 }
 
-.d-toc-header {
-  font-size: 0.6rem;
-  font-weight: 400;
-  color: rgba(0, 0, 0, 0.5);
-  text-transform: uppercase;
-  margin-top: 0;
-  margin-bottom: 1.3em;
+d-article div.sourceCode {
+  background-color: white;
 }
 
-.d-toc a {
-  border-bottom: none;
-}
-
-.d-toc ul {
-  padding-left: 0;
-}
-
-.d-toc li>ul {
-  padding-top: 0.8em;
-  padding-left: 16px;
-  margin-bottom: 0.6em;
-}
-
-.d-toc ul,
-.d-toc li {
-  list-style-type: none;
-}
-
-.d-toc li {
-  margin-bottom: 0.9em;
-}
-
-.d-toc-separator {
-  margin-top: 20px;
-  margin-bottom: 2em;
-}
-
-.d-article-with-toc {
-  border-top: none;
-  padding-top: 0;
-}
-
-
-
-/* Tweak code blocks (note that this CSS is repeated above in an injection
-   into the d-code shadow dom) */
-
-d-code {
-  overflow-x: auto !important;
-}
-
-pre.d-code code.d-code {
+d-article div.sourceCode pre {
   padding-left: 10px;
   font-size: 12px;
   border-left: 2px solid rgba(0,0,0,0.1);
 }
 
-pre.text-output {
-
+d-article pre {
   font-size: 12px;
   color: black;
   background: none;
-  font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+  margin-top: 0;
   text-align: left;
   white-space: pre;
   word-spacing: normal;
@@ -567,20 +892,123 @@ pre.text-output {
   hyphens: none;
 }
 
+d-article pre a {
+  border-bottom: none;
+}
+
+d-article pre a:hover {
+  border-bottom: none;
+  text-decoration: underline;
+}
+
 @media(min-width: 768px) {
 
-d-code {
-  overflow-x: visible !important;
+d-article pre,
+d-article div.sourceCode,
+d-article div.sourceCode pre {
+  overflow: visible !important;
 }
 
-pre.d-code code.d-code  {
-    padding-left: 18px;
-    font-size: 14px;
-}
-pre.text-output {
+d-article div.sourceCode pre {
+  padding-left: 18px;
   font-size: 14px;
 }
+
+d-article pre {
+  font-size: 14px;
 }
+
+}
+
+figure img.external {
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);
+  padding: 18px;
+  box-sizing: border-box;
+}
+
+/* CSS for d-contents */
+
+.d-contents {
+  grid-column: text;
+  color: rgba(0,0,0,0.8);
+  font-size: 0.9em;
+  padding-bottom: 1em;
+  margin-bottom: 1em;
+  padding-bottom: 0.5em;
+  margin-bottom: 1em;
+  padding-left: 0.25em;
+  justify-self: start;
+}
+
+@media(min-width: 1000px) {
+  .d-contents.d-contents-float {
+    height: 0;
+    grid-column-start: 1;
+    grid-column-end: 4;
+    justify-self: center;
+    padding-right: 3em;
+    padding-left: 2em;
+  }
+}
+
+.d-contents nav h3 {
+  font-size: 18px;
+  margin-top: 0;
+  margin-bottom: 1em;
+}
+
+.d-contents li {
+  list-style-type: none
+}
+
+.d-contents nav > ul {
+  padding-left: 0;
+}
+
+.d-contents ul {
+  padding-left: 1em
+}
+
+.d-contents nav ul li {
+  margin-top: 0.6em;
+  margin-bottom: 0.2em;
+}
+
+.d-contents nav a {
+  font-size: 13px;
+  border-bottom: none;
+  text-decoration: none
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.d-contents nav a:hover {
+  text-decoration: underline solid rgba(0, 0, 0, 0.6)
+}
+
+.d-contents nav > ul > li > a {
+  font-weight: 600;
+}
+
+.d-contents nav > ul > li > ul {
+  font-weight: inherit;
+}
+
+.d-contents nav > ul > li > ul > li {
+  margin-top: 0.2em;
+}
+
+
+.d-contents nav ul {
+  margin-top: 0;
+  margin-bottom: 0.25em;
+}
+
+.d-article-with-toc h2:nth-child(2) {
+  margin-top: 0;
+}
+
 
 /* Figure */
 
@@ -618,6 +1046,16 @@ pre.text-output {
   color: rgba(0, 0, 0, 1.0);
 }
 
+/* Citations */
+
+d-article .citation {
+  color: inherit;
+  cursor: inherit;
+}
+
+div.hanging-indent{
+  margin-left: 1em; text-indent: -1em;
+}
 
 
 /* Tweak 1000px media break to show more text */
@@ -693,6 +1131,91 @@ d-appendix .citation-appendix,
   word-wrap: break-word;
 }
 
+/* Include appendix styles here so they can be overridden */
+
+d-appendix {
+  contain: layout style;
+  font-size: 0.8em;
+  line-height: 1.7em;
+  margin-top: 60px;
+  margin-bottom: 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  color: rgba(0,0,0,0.5);
+  padding-top: 60px;
+  padding-bottom: 48px;
+}
+
+d-appendix h3 {
+  grid-column: page-start / text-start;
+  font-size: 15px;
+  font-weight: 500;
+  margin-top: 1em;
+  margin-bottom: 0;
+  color: rgba(0,0,0,0.65);
+}
+
+d-appendix h3 + * {
+  margin-top: 1em;
+}
+
+d-appendix ol {
+  padding: 0 0 0 15px;
+}
+
+@media (min-width: 768px) {
+  d-appendix ol {
+    padding: 0 0 0 30px;
+    margin-left: -30px;
+  }
+}
+
+d-appendix li {
+  margin-bottom: 1em;
+}
+
+d-appendix a {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+d-appendix > * {
+  grid-column: text;
+}
+
+d-appendix > d-footnote-list,
+d-appendix > d-citation-list,
+d-appendix > distill-appendix {
+  grid-column: screen;
+}
+
+/* Include footnote styles here so they can be overridden */
+
+d-footnote-list {
+  contain: layout style;
+}
+
+d-footnote-list > * {
+  grid-column: text;
+}
+
+d-footnote-list a.footnote-backlink {
+  color: rgba(0,0,0,0.3);
+  padding-left: 0.5em;
+}
+
+
+
+/* Anchor.js */
+
+.anchorjs-link {
+  /*transition: all .25s linear; */
+  text-decoration: none;
+  border-bottom: none;
+}
+*:hover > .anchorjs-link {
+  margin-left: -1.125em !important;
+  text-decoration: none;
+  border-bottom: none;
+}
 
 /* Social footer */
 
@@ -737,6 +1260,221 @@ d-appendix .citation-appendix,
 .article-footer .subscribe {
   font-size: 15px;
   margin-top: 45px;
+}
+
+
+.sidebar-section.custom {
+  font-size: 12px;
+  line-height: 1.6em;
+}
+
+.custom p {
+  margin-bottom: 0.5em;
+}
+
+/* Styles for listing layout (hide title) */
+.layout-listing d-title, .layout-listing .d-title {
+  display: none;
+}
+
+/* Styles for posts lists (not auto-injected) */
+
+
+.posts-with-sidebar {
+  padding-left: 45px;
+  padding-right: 45px;
+}
+
+.posts-list .description h2,
+.posts-list .description p {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif;
+}
+
+.posts-list .description h2 {
+  font-weight: 700;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.posts-list h2.post-tag {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  padding-bottom: 12px;
+}
+.posts-list {
+  margin-top: 60px;
+  margin-bottom: 24px;
+}
+
+.posts-list .post-preview {
+  text-decoration: none;
+  overflow: hidden;
+  display: block;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 24px 0;
+}
+
+.post-preview-last {
+  border-bottom: none !important;
+}
+
+.posts-list .posts-list-caption {
+  grid-column: screen;
+  font-weight: 400;
+}
+
+.posts-list .post-preview h2 {
+  margin: 0 0 6px 0;
+  line-height: 1.2em;
+  font-style: normal;
+  font-size: 24px;
+}
+
+.posts-list .post-preview p {
+  margin: 0 0 12px 0;
+  line-height: 1.4em;
+  font-size: 16px;
+}
+
+.posts-list .post-preview .thumbnail {
+  box-sizing: border-box;
+  margin-bottom: 24px;
+  position: relative;
+  max-width: 500px;
+}
+.posts-list .post-preview img {
+  width: 100%;
+  display: block;
+}
+
+.posts-list .metadata {
+  font-size: 12px;
+  line-height: 1.4em;
+  margin-bottom: 18px;
+}
+
+.posts-list .metadata > * {
+  display: inline-block;
+}
+
+.posts-list .metadata .publishedDate {
+  margin-right: 2em;
+}
+
+.posts-list .metadata .dt-authors {
+  display: block;
+  margin-top: 0.3em;
+  margin-right: 2em;
+}
+
+.posts-list .dt-tags {
+  display: block;
+  line-height: 1em;
+}
+
+.posts-list .dt-tags .dt-tag {
+  display: inline-block;
+  color: rgba(0,0,0,0.6);
+  padding: 0.3em 0.4em;
+  margin-right: 0.2em;
+  margin-bottom: 0.4em;
+  font-size: 60%;
+  border: 1px solid rgba(0,0,0,0.2);
+  border-radius: 3px;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.posts-list img {
+  opacity: 1;
+}
+
+.posts-list img[data-src] {
+  opacity: 0;
+}
+
+.posts-more {
+  clear: both;
+}
+
+
+.posts-sidebar {
+  font-size: 16px;
+}
+
+.posts-sidebar h3 {
+  font-size: 16px;
+  margin-top: 0;
+  margin-bottom: 0.5em;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+.sidebar-section {
+  margin-bottom: 30px;
+}
+
+.categories ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.categories li {
+  color: rgba(0, 0, 0, 0.8);
+  margin-bottom: 0;
+}
+
+.categories li>a {
+  border-bottom: none;
+}
+
+.categories li>a:hover {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+}
+
+.categories .active {
+  font-weight: 600;
+}
+
+.categories .category-count {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+
+@media(min-width: 768px) {
+  .posts-list .post-preview h2 {
+    font-size: 26px;
+  }
+  .posts-list .post-preview .thumbnail {
+    float: right;
+    width: 30%;
+    margin-bottom: 0;
+  }
+  .posts-list .post-preview .description {
+    float: left;
+    width: 45%;
+  }
+  .posts-list .post-preview .metadata {
+    float: left;
+    width: 20%;
+    margin-top: 8px;
+  }
+  .posts-list .post-preview p {
+    margin: 0 0 12px 0;
+    line-height: 1.5em;
+    font-size: 16px;
+  }
+  .posts-with-sidebar .posts-list {
+    float: left;
+    width: 75%;
+  }
+  .posts-with-sidebar .posts-sidebar {
+    float: right;
+    width: 20%;
+    margin-top: 60px;
+    padding-top: 24px;
+    padding-bottom: 24px;
+  }
 }
 
 
@@ -868,6 +1606,12 @@ d-appendix .citation-appendix,
   hyphens: none;
 }
 
+.downlevel .posts-list .post-preview {
+  color: inherit;
+}
+
+
+
 </style>
 
 <script type="application/javascript">
@@ -883,6 +1627,13 @@ function is_downlevel_browser() {
 
 // show body when load is complete
 function on_load_complete() {
+
+  // add anchors
+  if (window.anchors) {
+    window.anchors.options.placement = 'left';
+    window.anchors.add('d-article > h2, d-article > h3, d-article > h4, d-article > h5');
+  }
+
 
   // set body to visible
   document.body.style.visibility = 'visible';
@@ -929,23 +1680,8 @@ function init_distill() {
   // create d-appendix
   $('.d-appendix').changeElementType('d-appendix');
 
-  // create d-bibliography
-  var bibliography = $('<d-bibliography></d-bibliography>');
-  $('#distill-bibliography').wrap(bibliography);
-
   // flag indicating that we have appendix items
   var appendix = $('.appendix-bottom').children('h3').length > 0;
-
-  // replace citations with <d-cite>
-  $('.citation').each(function(i, val) {
-    appendix = true;
-    var cites = $(this).attr('data-cites').split(" ");
-    var dt_cite = $('<d-cite></d-cite>');
-    dt_cite.attr('key', cites.join());
-    $(this).replaceWith(dt_cite);
-  });
-  // remove refs
-  $('#refs').remove();
 
   // replace footnotes with <d-footnote>
   $('.footnote-ref').each(function(i, val) {
@@ -963,39 +1699,21 @@ function init_distill() {
   // remove footnotes
   $('.footnotes').remove();
 
+  // move refs into #references-listing
+  $('#references-listing').replaceWith($('#refs'));
+
   $('h1.appendix, h2.appendix').each(function(i, val) {
     $(this).changeElementType('h3');
   });
   $('h3.appendix').each(function(i, val) {
     var id = $(this).attr('id');
-    $('.d-toc a[href="#' + id + '"]').parent().remove();
+    $('.d-contents a[href="#' + id + '"]').parent().remove();
     appendix = true;
     $(this).nextUntil($('h1, h2, h3')).addBack().appendTo($('d-appendix'));
   });
 
   // show d-appendix if we have appendix content
   $("d-appendix").css('display', appendix ? 'grid' : 'none');
-
-  // replace code blocks with d-code
-  $('pre>code').each(function(i, val) {
-    var code = $(this);
-    var pre = code.parent();
-    var clz = "";
-    var language = pre.attr('class');
-    if (language) {
-      // map unknown languages to "clike" (without this they just dissapear)
-      if ($.inArray(language, ["bash", "clike", "css", "go", "html",
-                               "javascript", "js", "julia", "lua", "markdown",
-                               "markup", "mathml", "python", "svg", "xml"]) == -1)
-        language = "clike";
-      language = ' language="' + language + '"';
-      var dt_code = $('<d-code block' + language + clz + '></d-code>');
-      dt_code.text(code.text());
-      pre.replaceWith(dt_code);
-    } else {
-      code.addClass('text-output').unwrap().changeElementType('pre');
-    }
-  });
 
   // localize layout chunks to just output
   $('.layout-chunk').each(function(i, val) {
@@ -1004,7 +1722,7 @@ function init_distill() {
     var layout = $(this).attr('data-layout');
 
     // apply layout to markdown level block elements
-    var elements = $(this).children().not('d-code, pre.text-output, script');
+    var elements = $(this).children().not('div.sourceCode, pre, script');
     elements.each(function(i, el) {
       var layout_div = $('<div class="' + layout + '"></div>');
       if (layout_div.hasClass('shaded')) {
@@ -1021,6 +1739,13 @@ function init_distill() {
     $(this).children().unwrap();
   });
 
+  // remove code block used to force  highlighting css
+  $('.distill-force-highlighting-css').parent().remove();
+
+  // remove empty line numbers inserted by pandoc when using a
+  // custom syntax highlighting theme
+  $('code.sourceCode a:empty').remove();
+
   // load distill framework
   load_distill_framework();
 
@@ -1036,12 +1761,26 @@ function init_distill() {
     if (!have_authors)
       $('d-byline').addClass('hidden');
 
-    // table of contents
-    if (have_authors) // adjust border if we are in authors
-      $('.d-toc').parent().addClass('d-article-with-toc');
+    // article with toc class
+    $('.d-contents').parent().addClass('d-article-with-toc');
 
     // strip links that point to #
     $('.authors-affiliations').find('a[href="#"]').removeAttr('href');
+
+    // add orcid ids
+    $('.authors-affiliations').find('.author').each(function(i, el) {
+      var orcid_id = front_matter.authors[i].orcidID;
+      if (orcid_id) {
+        var a = $('<a></a>');
+        a.attr('href', 'https://orcid.org/' + orcid_id);
+        var img = $('<img></img>');
+        img.addClass('orcid-id');
+        img.attr('alt', 'ORCID ID');
+        img.attr('src','data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg==');
+        a.append(img);
+        $(this).append(a);
+      }
+    });
 
     // hide elements of author/affiliations grid that have no value
     function hide_byline_column(caption) {
@@ -1091,14 +1830,9 @@ function init_distill() {
       grid.children('h3:contains("Affiliations")').text('Affiliation');
     }
 
-    // inject pre code styles (can't do this with a global stylesheet b/c a shadow root is used)
-    $('d-code').each(function(i, val) {
-      var style = document.createElement('style');
-      style.innerHTML = 'pre code { padding-left: 10px; font-size: 12px; border-left: 2px solid rgba(0,0,0,0.1); } ' +
-                        '@media(min-width: 768px) { pre code { padding-left: 18px; font-size: 14px; } }';
-      if (this.shadowRoot)
-        this.shadowRoot.appendChild(style);
-    });
+    // remove d-appendix and d-footnote-list local styles
+    $('d-appendix > style:first-child').remove();
+    $('d-footnote-list > style:first-child').remove();
 
     // move appendix-bottom entries to the bottom
     $('.appendix-bottom').appendTo('d-appendix').children().unwrap();
@@ -1134,9 +1868,7 @@ function init_downlevel() {
   $('.d-byline a').remove();
 
   // remove toc
-  $('.d-toc-header').remove();
-  $('.d-toc').remove();
-  $('.d-toc-separator').remove();
+  $('.d-contents').remove();
 
   // move appendix elements
   $('h1.appendix, h2.appendix').each(function(i, val) {
@@ -1266,6 +1998,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <!--/radix_placeholder_distill-->
   <script src="../../site_libs/jquery-1.11.3/jquery.min.js"></script>
+  <script src="../../site_libs/anchor-4.2.2/anchor.min.js"></script>
   <script src="../../site_libs/bowser-1.9.3/bowser.min.js"></script>
   <script src="../../site_libs/webcomponents-2.0.0/webcomponents.js"></script>
   <script src="../../site_libs/distill-2.2.21/template.v2.js"></script>
@@ -1280,7 +2013,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <!--radix_placeholder_front_matter-->
 
 <script id="distill-front-matter" type="text/json">
-{"title":"Old faithful, Meet the Neighbors, and Lost in the Forest","description":"Model description and evaluation.","authors":[{"author":"Shaina Trevino, Jonathan Pedroza, Akhila Nekkanti","authorURL":"https://github.com/akhilanekkanti1/Final_ML_Blog","affiliation":"&nbsp;","affiliationURL":"#"}],"publishedDate":"2020-11-30T00:00:00.000-08:00","citationText":"Nekkanti, 2020"}
+{"title":"Old faithful, Meet the Neighbors, and Lost in the Forest","description":"Model description and evaluation.","authors":[{"author":"Shaina Trevino, Jonathan Pedroza, Akhila Nekkanti","authorURL":"https://github.com/akhilanekkanti1/Final_ML_Blog","affiliation":"&nbsp;","affiliationURL":"#","orcidID":""}],"publishedDate":"2020-11-30T00:00:00.000-08:00","citationText":"Nekkanti, 2020"}
 </script>
 
 <!--/radix_placeholder_front_matter-->
@@ -1289,6 +2022,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <nav class="distill-site-nav distill-site-header">
 <div class="nav-left">
 <a href="../../index.html" class="title">My Blog</a>
+<input id="distill-search" class="nav-search hidden" type="text" placeholder="Search..."/>
 </div>
 <div class="nav-right">
 <a href="../../index.html">Home</a>
@@ -1303,6 +2037,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <div class="d-title">
 <h1>Old faithful, Meet the Neighbors, and Lost in the Forest</h1>
+<!--radix_placeholder_categories-->
+<!--/radix_placeholder_categories-->
 <p><p>Model description and evaluation.</p></p>
 </div>
 
@@ -1318,68 +2054,80 @@ document.addEventListener('DOMContentLoaded', function() {
 <h2 id="split-the-data">Split the Data</h2>
 <p>Before we start fitting models, the first step is to split our data into two parts: training and testing data. To do this, we use <code>initial_split</code> to split the data and then define our training and testing set. Notice that we also used stratified sampling (<code>strata = "score"</code>) when splitting our data to ensure the training and testing sets have similar outcome responses.</p>
 <div class="layout-chunk" data-layout="l-body">
-<pre class="r"><code>
-set.seed(1272020)
+<div class="sourceCode">
+<pre><code><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>1272020</span><span class='op'>)</span>
 
-d_split &lt;- initial_split(d, strata = &quot;score&quot;)
+<span class='va'>d_split</span> <span class='op'>&lt;-</span> <span class='fu'>initial_split</span><span class='op'>(</span><span class='va'>d</span>, strata <span class='op'>=</span> <span class='st'>"score"</span><span class='op'>)</span>
 
-d_train &lt;- training(d_split)
-d_test  &lt;- testing(d_split)</code></pre>
+<span class='va'>d_train</span> <span class='op'>&lt;-</span> <span class='fu'>training</span><span class='op'>(</span><span class='va'>d_split</span><span class='op'>)</span>
+<span class='va'>d_test</span>  <span class='op'>&lt;-</span> <span class='fu'>testing</span><span class='op'>(</span><span class='va'>d_split</span><span class='op'>)</span>
+</code></pre>
+</div>
 </div>
 <p>Then, we take our testing set and create a k-fold cross validation object. This splits our training set into 10 different samples of data each with their own training and testing set. We will use this object to evaluate the performance metrics for each model across all 10 samples.</p>
 <div class="layout-chunk" data-layout="l-body">
-<pre class="r"><code>
-set.seed(1272020)
+<div class="sourceCode">
+<pre><code><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>1272020</span><span class='op'>)</span>
 
-train_cv &lt;- vfold_cv(d_train, strata = &quot;score&quot;)</code></pre>
+<span class='va'>train_cv</span> <span class='op'>&lt;-</span> <span class='fu'>vfold_cv</span><span class='op'>(</span><span class='va'>d_train</span>, strata <span class='op'>=</span> <span class='st'>"score"</span><span class='op'>)</span>
+</code></pre>
+</div>
 </div>
 <h2 id="define-the-recipe">Define the Recipe</h2>
 <p>This recipe is explained in the previous post. However, we provided the code here as well for completeness. We will use this same recipe for all models.</p>
 <div class="layout-chunk" data-layout="l-body">
-<pre class="r"><code>
-rec_yoself &lt;- recipe(score ~ .,data = d_train) %&gt;%
-  step_mutate(tst_dt = as.numeric(lubridate::mdy_hms(tst_dt))) %&gt;% 
-  update_role(contains(&quot;id&quot;), ncessch, new_role = &quot;id vars&quot;) %&gt;%
-  step_unknown(all_nominal()) %&gt;% 
-  step_novel(all_nominal()) %&gt;% 
-  step_dummy(all_nominal()) %&gt;% 
-  step_nzv(all_predictors()) %&gt;%
-  step_normalize(all_numeric(), -all_outcomes(), -has_role(&quot;id vars&quot;)) %&gt;%
-  step_medianimpute(all_numeric(), -all_outcomes(), -has_role(&quot;id vars&quot;)) %&gt;%  
-  step_interact(terms = ~lat:lon) %&gt;% 
-  step_nzv(all_predictors())</code></pre>
+<div class="sourceCode">
+<pre><code><span class='va'>rec_yoself</span> <span class='op'>&lt;-</span> <span class='fu'>recipe</span><span class='op'>(</span><span class='va'>score</span> <span class='op'>~</span> <span class='va'>.</span>,data <span class='op'>=</span> <span class='va'>d_train</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>step_mutate</span><span class='op'>(</span>tst_dt <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='fu'>lubridate</span><span class='fu'>::</span><span class='fu'><a href='http://lubridate.tidyverse.org/reference/ymd_hms.html'>mdy_hms</a></span><span class='op'>(</span><span class='va'>tst_dt</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'>update_role</span><span class='op'>(</span><span class='fu'>contains</span><span class='op'>(</span><span class='st'>"id"</span><span class='op'>)</span>, <span class='va'>ncessch</span>, new_role <span class='op'>=</span> <span class='st'>"id vars"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>step_unknown</span><span class='op'>(</span><span class='fu'>all_nominal</span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'>step_novel</span><span class='op'>(</span><span class='fu'>all_nominal</span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'>step_dummy</span><span class='op'>(</span><span class='fu'>all_nominal</span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'>step_nzv</span><span class='op'>(</span><span class='fu'>all_predictors</span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>step_normalize</span><span class='op'>(</span><span class='fu'>all_numeric</span><span class='op'>(</span><span class='op'>)</span>, <span class='op'>-</span><span class='fu'>all_outcomes</span><span class='op'>(</span><span class='op'>)</span>, <span class='op'>-</span><span class='fu'>has_role</span><span class='op'>(</span><span class='st'>"id vars"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>step_medianimpute</span><span class='op'>(</span><span class='fu'>all_numeric</span><span class='op'>(</span><span class='op'>)</span>, <span class='op'>-</span><span class='fu'>all_outcomes</span><span class='op'>(</span><span class='op'>)</span>, <span class='op'>-</span><span class='fu'>has_role</span><span class='op'>(</span><span class='st'>"id vars"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>  
+  <span class='fu'>step_interact</span><span class='op'>(</span>terms <span class='op'>=</span> <span class='op'>~</span><span class='va'>lat</span><span class='op'>:</span><span class='va'>lon</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'>step_nzv</span><span class='op'>(</span><span class='fu'>all_predictors</span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
+</code></pre>
+</div>
 </div>
 <h1 id="model-1-old-faithful---penalized-regression-model">Model 1: Old Faithful - Penalized Regression Model</h1>
 <p>Finally, we are ready to create our first model. This will be a penalized regression, specifically an elastic net model. Linear regression models are usually easier to interpret and less computationally intensive.</p>
 <p>To run an enet model, you must specify the penalty argument (for dealing with multicolinearity) and the mixture argument (proportion of ridge [0] to lasso [1] models). For our purposes, we will tune these parameters to find the values that result in the best model performance.</p>
 <div class="layout-chunk" data-layout="l-body">
-<pre class="r"><code>
-lr_mod &lt;- linear_reg()  %&gt;%
-  set_engine(&quot;glmnet&quot;) %&gt;% 
-  set_mode(&quot;regression&quot;) %&gt;% 
-  set_args(penalty = tune(),
-           mixture = tune())</code></pre>
+<div class="sourceCode">
+<pre><code><span class='va'>lr_mod</span> <span class='op'>&lt;-</span> <span class='fu'>linear_reg</span><span class='op'>(</span><span class='op'>)</span>  <span class='op'>%&gt;%</span>
+  <span class='fu'>set_engine</span><span class='op'>(</span><span class='st'>"glmnet"</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'>set_mode</span><span class='op'>(</span><span class='st'>"regression"</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'>set_args</span><span class='op'>(</span>penalty <span class='op'>=</span> <span class='fu'>tune</span><span class='op'>(</span><span class='op'>)</span>,
+           mixture <span class='op'>=</span> <span class='fu'>tune</span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
+</code></pre>
+</div>
 </div>
 <h3 id="workflow">Workflow</h3>
 <p>After specifying our enet model, we use the <code>workflow</code> package to combine our recipe and our model into one workflow object. This makes it easier to monitor and update your recipe and model that you are working with.</p>
 <div class="layout-chunk" data-layout="l-body">
-<pre class="r"><code>
-lr_flo &lt;- workflow() %&gt;% 
-  add_recipe(rec_yoself) %&gt;% 
-  add_model(lr_mod)</code></pre>
+<div class="sourceCode">
+<pre><code><span class='va'>lr_flo</span> <span class='op'>&lt;-</span> <span class='fu'>workflow</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'>add_recipe</span><span class='op'>(</span><span class='va'>rec_yoself</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'>add_model</span><span class='op'>(</span><span class='va'>lr_mod</span><span class='op'>)</span>
+</code></pre>
+</div>
 </div>
 <h4 id="tune-model">Tune Model</h4>
 <p>We are now ready to tune our enet model. To tune the model we first need to create a grid for tuning parameters. Since we are using a linear regression model, we decided to use a regular grid with our two hyperparameters (<code>penalty()</code> and <code>mixture()</code>). We also specified 30 levels (i.e., 30 values for each hyperparameter) to create the grid.</p>
 <div class="layout-chunk" data-layout="l-body">
-<pre class="r"><code>
-#create grid
-lr_grd &lt;- grid_regular(penalty(), mixture(), levels = 30)
+<div class="sourceCode">
+<pre><code><span class='co'>#create grid</span>
+<span class='va'>lr_grd</span> <span class='op'>&lt;-</span> <span class='fu'>grid_regular</span><span class='op'>(</span><span class='fu'>penalty</span><span class='op'>(</span><span class='op'>)</span>, <span class='fu'>mixture</span><span class='op'>(</span><span class='op'>)</span>, levels <span class='op'>=</span> <span class='fl'>30</span><span class='op'>)</span>
 
-#tune model 
-tictoc::tic()
-lr_res &lt;- tune::tune_grid(lr_flo, resamples = train_cv, grid = lr_grd,
-                           control = tune::control_resamples(save_pred = TRUE))
-tictoc::toc()</code></pre>
+<span class='co'>#tune model </span>
+<span class='fu'>tictoc</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/tictoc/man/tic.html'>tic</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>lr_res</span> <span class='op'>&lt;-</span> <span class='fu'>tune</span><span class='fu'>::</span><span class='fu'><a href='https://tune.tidymodels.org/reference/tune_grid.html'>tune_grid</a></span><span class='op'>(</span><span class='va'>lr_flo</span>, resamples <span class='op'>=</span> <span class='va'>train_cv</span>, grid <span class='op'>=</span> <span class='va'>lr_grd</span>,
+                           control <span class='op'>=</span> <span class='fu'>tune</span><span class='fu'>::</span><span class='fu'><a href='https://tune.tidymodels.org/reference/control_grid.html'>control_resamples</a></span><span class='op'>(</span>save_pred <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'>tictoc</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/tictoc/man/tic.html'>toc</a></span><span class='op'>(</span><span class='op'>)</span>
+</code></pre>
+</div>
 </div>
 <p>When we ran the previous model on the HPC cluster, it only took 26 minutes to tune. The values that lead to the highest performance (i.e., lowest RMSE) for our tuning parameters were:</p>
 <ul>
@@ -1390,31 +2138,34 @@ tictoc::toc()</code></pre>
 <h4 id="apply-best-tuning-parameters">Apply Best Tuning Parameters</h4>
 <p>We can then apply these values to our arguments in our model with the select <code>select_best</code> function. Remember to update and finalize your workflow with the new model as well.</p>
 <div class="layout-chunk" data-layout="l-body">
-<pre class="r"><code>
-#select best tuning parameters
-lr_best &lt;- lr_res %&gt;% 
-  select_best(metric = &quot;rmse&quot;)
+<div class="sourceCode">
+<pre><code><span class='co'>#select best tuning parameters</span>
+<span class='va'>lr_best</span> <span class='op'>&lt;-</span> <span class='va'>lr_res</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'>select_best</span><span class='op'>(</span>metric <span class='op'>=</span> <span class='st'>"rmse"</span><span class='op'>)</span>
 
-#finalize model in workflow
-lr_flo_final &lt;- finalize_workflow(lr_flo, lr_best)</code></pre>
+<span class='co'>#finalize model in workflow</span>
+<span class='va'>lr_flo_final</span> <span class='op'>&lt;-</span> <span class='fu'>finalize_workflow</span><span class='op'>(</span><span class='va'>lr_flo</span>, <span class='va'>lr_best</span><span class='op'>)</span>
+</code></pre>
+</div>
 </div>
 <h3 id="model-1-results">Model 1 Results</h3>
 <p>Once we have finalized our model and workflow, we can use the <code>last_fit()</code> function to apply our recipe and model to the <code>initial_split</code> object we made. This will evaluate the model performance on the testing set. We then use the <code>collect_metrics()</code> function to view our performance metrics on the test set.</p>
 <div class="layout-chunk" data-layout="l-body">
-<pre class="r"><code>
-#evaluate on test set with last_fit
-lr_final_res &lt;- last_fit(
-  lr_flo_final,
-  split = d_split)
+<div class="sourceCode">
+<pre><code><span class='co'>#evaluate on test set with last_fit</span>
+<span class='va'>lr_final_res</span> <span class='op'>&lt;-</span> <span class='fu'>last_fit</span><span class='op'>(</span>
+  <span class='va'>lr_flo_final</span>,
+  split <span class='op'>=</span> <span class='va'>d_split</span><span class='op'>)</span>
 
-#view performance metric
-lr_final_res %&gt;%
-  collect_metrics() %&gt;% 
-  filter(`.metric` == &quot;rmse&quot;)</code></pre>
+<span class='co'>#view performance metric</span>
+<span class='va'>lr_final_res</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>collect_metrics</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'><a href='https://rdrr.io/r/stats/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>`.metric`</span> <span class='op'>==</span> <span class='st'>"rmse"</span><span class='op'>)</span>
+</code></pre>
+</div>
 </div>
 <div class="layout-chunk" data-layout="l-body">
-<pre><code>
-# A tibble: 1 x 4
+<pre><code># A tibble: 1 x 4
   .metric .estimator .estimate .config             
   &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt; &lt;fct&gt;               
 1 rmse    standard        89.0 Preprocessor1_Model1</code></pre>
@@ -1423,24 +2174,24 @@ lr_final_res %&gt;%
 <h4 id="get-predictions">Get Predictions</h4>
 <p>We also wanted to note that if you wanted to extract predictions from the test dataset within the split object (e.g., <code>d_split</code>), you can use the <code>collect_predictions()</code> function. However, our goal is to compare this model performance with two different models and then extract predictions from the best one.</p>
 <div class="layout-chunk" data-layout="l-body">
-<pre class="r"><code>
-test_preds &lt;- lr_final_res %&gt;% collect_predictions()
-test_preds</code></pre>
+<div class="sourceCode">
+<pre><code><span class='va'>test_preds</span> <span class='op'>&lt;-</span> <span class='va'>lr_final_res</span> <span class='op'>%&gt;%</span> <span class='fu'>collect_predictions</span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>test_preds</span>
+</code></pre>
+</div>
 </div>
 <h1 id="model-2-meet-the-neighbors---k-nearest-neighbor-knn-an">Model 2: Meet the Neighbors - K Nearest Neighbor (KNN) (AN)</h1>
 <h4 id="well-use-the-same-data-and-recipe-from-our-first-model---this-way-we-can-see-whether-improvements-to-model-fit-are-actually-due-to-an-improved-model.">We’ll use the same data and recipe from our first Model - This way, we can see whether improvements to model fit are actually due to an improved model.</h4>
 <h5 id="a-k-nearest-neighbor-knn-model-aims-to-find-the-closest-neighbors-or-closest-data-points-in-the-predictor-space.-this-means-that-the-model-uses-information-from-previous-samples-to-find-the-points-that-are-closest-in-proximity-to-the-new-sample.-while-knn-models-can-be-computationally-inefficient-they-make-fewer-assumptions-about-the-data-and-may-be-preferable-when-datasets-are-nonparametric-or-where-distributions-are-largely-unknown.-we-chose-this-model-for-our-case-because-many-of-our-predictors-are-non-parametric-and-our-dataset-is-very-large.">A K nearest neighbor (KNN) model aims to find the closest <em>neighbors</em>, or closest data points in the predictor space. This means that the model uses information from previous samples to find the points that are closest in proximity to the new sample. While KNN models can be computationally inefficient, they make fewer assumptions about the data and may be preferable when datasets are nonparametric, or where distributions are largely unknown. We chose this model for our case because many of our predictors are non-parametric and our dataset is very large.</h5>
 <div class="layout-chunk" data-layout="l-body">
-<pre class="r"><code>
-knn_mod &lt;- nearest_neighbor()  %&gt;%
-  set_engine(&quot;kknn&quot;) %&gt;% </code></pre>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>knn_mod &lt;-<span class="st"> </span><span class="kw">nearest_neighbor</span>()  <span class="op">%&gt;%</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="st">  </span><span class="kw">set_engine</span>(<span class="st">&quot;kknn&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span></code></pre></div>
 </div>
 <h5 id="when-specifying-the-model-we-set-the-mode-to-regression.-this-tells-it-to-take-the-average-outcome-of-k-cases-rather-than-the-mode.-because-our-outcome-is-continuous-we-went-with-the-regression-method.">When specifying the model, we set the mode to “regression”. This tells it to take the average outcome of <em>K</em> cases, rather than the mode. Because our outcome is continuous, we went with the regression method.</h5>
 <div class="layout-chunk" data-layout="l-body">
-<pre class="r"><code>
-#knn_mod &lt;- nearest_neighbor()  %&gt;%
-#  set_engine(&quot;kknn&quot;) %&gt;% 
-  set_mode(&quot;regression&quot;) %&gt;%</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="co">#knn_mod &lt;- nearest_neighbor()  %&gt;%</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="co">#  set_engine(&quot;kknn&quot;) %&gt;% </span></span>
+<span id="cb3-3"><a href="#cb3-3"></a>  <span class="kw">set_mode</span>(<span class="st">&quot;regression&quot;</span>) <span class="op">%&gt;%</span></span></code></pre></div>
 </div>
 <h4 id="next-we-determine-how-to-identify-the-neighbors.-the-defaults-from-the-kknn-package-include-5-neighbors-set-the-weight_func-to-optimal-and-the-dist_power-to-2.">Next we determine how to identify the neighbors. The defaults from the <code>{kknn}</code> package include 5 neighbors, set the <code>weight_func</code> to “optimal”, and the <code>dist_power()</code> to “2”.</h4>
 <ul>
@@ -1450,140 +2201,244 @@ knn_mod &lt;- nearest_neighbor()  %&gt;%
 </ul>
 <h5 id="here-we-set-each-of-these-parameters-to-tune-so-that-the-model-could-determine-the-best-values-based-on-the-data.">Here, we set each of these parameters to ‘tune()’, so that the model could determine the best values based on the data.</h5>
 <div class="layout-chunk" data-layout="l-body">
-<pre class="r"><code>
-#knn_mod &lt;- nearest_neighbor()  %&gt;%
-#  set_engine(&quot;kknn&quot;) %&gt;% 
-#  set_mode(&quot;regression&quot;) %&gt;% 
-  set_args(neighbors = tune()),
-           weight_func = tune(),
-           dist_power = tune())</code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="co">#knn_mod &lt;- nearest_neighbor()  %&gt;%</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="co">#  set_engine(&quot;kknn&quot;) %&gt;% </span></span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="co">#  set_mode(&quot;regression&quot;) %&gt;% </span></span>
+<span id="cb4-4"><a href="#cb4-4"></a>  <span class="kw">set_args</span>(<span class="dt">neighbors =</span> <span class="kw">tune</span>()),</span>
+<span id="cb4-5"><a href="#cb4-5"></a>           weight_func =<span class="st"> </span><span class="kw">tune</span>(),</span>
+<span id="cb4-6"><a href="#cb4-6"></a>           dist_power =<span class="st"> </span><span class="kw">tune</span>()<span class="er">)</span></span></code></pre></div>
 </div>
 <h5 id="unfortunately-setting-all-three-parameters-to-tune-was-computationally-inefficient.-that-is-it-took-longer-than-16-hours-to-run-on-a-cluster-computer.-so-we-removed-the-tuning-parameters-for-weight_func-and-dist_power-and-left-these-to-the-defaults.-we-felt-it-was-important-to-tune-the-neighbors-however.">Unfortunately, setting all three parameters to ‘tune()’ was computationally inefficient. That is, it took longer than 16 hours to run on a cluster computer. So, we removed the tuning parameters for ‘weight_func’ and ‘dist_power’, and left these to the defaults. We felt it was important to tune the neighbors however.</h5>
 <div class="layout-chunk" data-layout="l-body">
-<pre class="r"><code>
-knn_mod &lt;- nearest_neighbor()  %&gt;%
-  set_engine(&quot;kknn&quot;) %&gt;% 
-  set_mode(&quot;regression&quot;) %&gt;% 
-  set_args(neighbors = tune())#,
-           #weight_func = tune()#,
-           #dist_power = tune())</code></pre>
+<div class="sourceCode">
+<pre><code><span class='va'>knn_mod</span> <span class='op'>&lt;-</span> <span class='fu'>nearest_neighbor</span><span class='op'>(</span><span class='op'>)</span>  <span class='op'>%&gt;%</span>
+  <span class='fu'>set_engine</span><span class='op'>(</span><span class='st'>"kknn"</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'>set_mode</span><span class='op'>(</span><span class='st'>"regression"</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'>set_args</span><span class='op'>(</span>neighbors <span class='op'>=</span> <span class='fu'>tune</span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span><span class='co'>#,</span>
+           <span class='co'>#weight_func = tune()#,</span>
+           <span class='co'>#dist_power = tune())</span>
+</code></pre>
+</div>
 </div>
 <h5 id="woohoo-model-specified-now-to-create-a-workflow-and-start-running-things.-here-we-use-a-workflow-to-bundle-our-preprocessing-and-modelling-together.-were-using-the-same-recipe-as-before-rec_yoself-and-the-model-we-just-created-knn_mod.">Woohoo! Model = specified! Now to create a workflow and start running things. Here we use a workflow to bundle our preprocessing and modelling together. We’re using the same recipe as before, ‘rec_yoself’, and the model we just created, ‘knn_mod’.</h5>
 <div class="layout-chunk" data-layout="l-body">
-<pre class="r"><code>
-knn_flo &lt;- workflow() %&gt;% 
-  add_recipe(rec_yoself) %&gt;% 
-  add_model(knn_mod)</code></pre>
+<div class="sourceCode">
+<pre><code><span class='va'>knn_flo</span> <span class='op'>&lt;-</span> <span class='va'>lr_flo</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'>update_model</span><span class='op'>(</span><span class='va'>knn_mod</span><span class='op'>)</span>
+</code></pre>
+</div>
 </div>
 <h5 id="we-aimed-to-use-a-space-filling-design-when-specifying-our-non-regular-grid.-this-type-of-design-aims-to-keep-potential-points-away-from-each-other-while-also-encompassing-the-entire-parameter-space.-here-we-specify-the-parameters-as-well-as-the-range-for-neighbors-prior-to-creating-the-grid.-note---this-is-prior-to-removing-the-tuning-parameters-above">We aimed to use a space-filling design when specifying our non-regular grid. This type of design aims to keep potential points away from each other while also encompassing the entire parameter space. Here, we specify the parameters, as well as the range for neighbors, prior to creating the grid. (*Note - this is prior to removing the tuning parameters above)</h5>
 <div class="layout-chunk" data-layout="l-body">
-<pre class="r"><code>
-knn_par &lt;- parameters(neighbors(range = (c(10, 75))), weight_func(), dist_power()) #testing with smaller range due to computation
-knn_grd &lt;- grid_max_entropy(knn_par, size = 30)</code></pre>
+<div class="sourceCode">
+<pre><code><span class='va'>knn_par</span> <span class='op'>&lt;-</span> <span class='fu'>parameters</span><span class='op'>(</span><span class='fu'>neighbors</span><span class='op'>(</span>range <span class='op'>=</span> <span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>10</span>, <span class='fl'>75</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>, <span class='fu'>weight_func</span><span class='op'>(</span><span class='op'>)</span>, <span class='fu'>dist_power</span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span> <span class='co'>#testing with smaller range due to computation</span>
+<span class='va'>knn_grd</span> <span class='op'>&lt;-</span> <span class='fu'>grid_max_entropy</span><span class='op'>(</span><span class='va'>knn_par</span>, size <span class='op'>=</span> <span class='fl'>30</span><span class='op'>)</span>
+</code></pre>
+</div>
 </div>
 <h5 id="unfortunately-this-too-contributed-to-a-computationally-inefficient-model.-so-we-used-the-defaults-for-grid_max_entropy-and-only-specified-neighbors-and-size-of-the-grid.">Unfortunately, this too contributed to a computationally inefficient model. So, we used the defaults for <code>grid_max_entropy()</code> and only specified <code>neighbors()</code> and size of the grid.</h5>
 <div class="layout-chunk" data-layout="l-body">
-<pre class="r"><code>
-#knn_par &lt;- parameters(neighbors(range = (c(10, 75))), weight_func(), dist_power()) #testing with smaller range due to computation
-knn_grd &lt;- grid_max_entropy(neighbors(), size = 30) #testing with smaller size due to computation </code></pre>
+<div class="sourceCode">
+<pre><code><span class='co'>#knn_par &lt;- parameters(neighbors(range = (c(10, 75))), weight_func(), dist_power()) #testing with smaller range due to computation</span>
+<span class='va'>knn_grd</span> <span class='op'>&lt;-</span> <span class='fu'>grid_max_entropy</span><span class='op'>(</span><span class='fu'>neighbors</span><span class='op'>(</span><span class='op'>)</span>, size <span class='op'>=</span> <span class='fl'>30</span><span class='op'>)</span> <span class='co'>#testing with smaller size due to computation </span>
+</code></pre>
+</div>
 </div>
 <h5 id="finally-we-are-ready-to-tune-our-grid-according-to-our-cross-fold-validated-data.-we-specify-our-workflow-knn_flo-the-resamples-we-want-the-model-to-use-train_cv-and-the-grid-we-created-above-knn_grd.">Finally, we are ready to tune our grid according to our cross-fold validated data. We specify our workflow (knn_flo), the resamples we want the model to use (train_cv), and the grid we created above (knn_grd).</h5>
 <h5 id="youll-notice-in-between-the-hashtags-we-include-some-code-to-employ-parallel-processing.-this-allows-the-model-to-run-on-each-sample-simultaneously-in-an-attempt-to-cut-down-on-computation-time.">You’ll notice in between the hashtags, we include some code to employ parallel processing. This allows the model to run on each sample simultaneously, in an attempt to cut down on computation time.</h5>
 <div class="layout-chunk" data-layout="l-body">
-<pre class="r"><code>
-#
-cl &lt;- makePSOCKcluster(all_cores)
-registerDoParallel(cl)
-foreach::getDoParWorkers()
-clusterEvalQ(cl, {library(tidymodels)})
-#
+<div class="sourceCode">
+<pre><code><span class='co'>#</span>
+<span class='va'>cl</span> <span class='op'>&lt;-</span> <span class='fu'>makePSOCKcluster</span><span class='op'>(</span><span class='va'>all_cores</span><span class='op'>)</span>
+<span class='fu'>registerDoParallel</span><span class='op'>(</span><span class='va'>cl</span><span class='op'>)</span>
+<span class='fu'>foreach</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/foreach/man/getDoParWorkers.html'>getDoParWorkers</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='fu'>clusterEvalQ</span><span class='op'>(</span><span class='va'>cl</span>, <span class='op'>{</span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://tidymodels.tidymodels.org'>tidymodels</a></span><span class='op'>)</span><span class='op'>}</span><span class='op'>)</span>
+<span class='co'>#</span>
 
-knn_res &lt;- tune::tune_grid(knn_flo, resamples = train_cv, grid = knn_grd,
-                           control = tune::control_resamples(save_pred = TRUE))
+<span class='va'>knn_res</span> <span class='op'>&lt;-</span> <span class='fu'>tune</span><span class='fu'>::</span><span class='fu'><a href='https://tune.tidymodels.org/reference/tune_grid.html'>tune_grid</a></span><span class='op'>(</span><span class='va'>knn_flo</span>, resamples <span class='op'>=</span> <span class='va'>train_cv</span>, grid <span class='op'>=</span> <span class='va'>knn_grd</span>,
+                           control <span class='op'>=</span> <span class='fu'>tune</span><span class='fu'>::</span><span class='fu'><a href='https://tune.tidymodels.org/reference/control_grid.html'>control_resamples</a></span><span class='op'>(</span>save_pred <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span>
 
-#
-parallel::stopCluster(cl)
-#</code></pre>
+<span class='co'>#</span>
+<span class='fu'>parallel</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/r/parallel/makeCluster.html'>stopCluster</a></span><span class='op'>(</span><span class='va'>cl</span><span class='op'>)</span>
+<span class='co'>#</span>
+</code></pre>
+</div>
 </div>
 <h5 id="lastly-we-want-to-select-the-best-tuning-parameters-and-use-them-to-finalize-the-workflow.-as-you-may-have-guessed-the-only-tuned-parameters-are-the-number-of-neighbors---since-both-the-dist_func-and-weight_func-were-too-computationally-expensive-to-move-away-from-defaults.-the-optimal-number-of-neighbors-for-our-model-was-10.">Lastly, we want to select the best tuning parameters and use them to finalize the workflow. As you may have guessed, the only tuned parameters are the number of neighbors - since both the dist_func and weight_func were too computationally expensive to move away from defaults. The optimal number of neighbors for our model was <code>10</code>.</h5>
 <div class="layout-chunk" data-layout="l-body">
-<pre class="r"><code>
-knn_best &lt;- knn_res %&gt;% 
-  select_best(metric = &quot;rmse&quot;)
+<div class="sourceCode">
+<pre><code><span class='va'>knn_best</span> <span class='op'>&lt;-</span> <span class='va'>knn_res</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'>select_best</span><span class='op'>(</span>metric <span class='op'>=</span> <span class='st'>"rmse"</span><span class='op'>)</span>
 
-knn_flo_final &lt;- finalize_workflow(knn_flo, knn_best)
+<span class='va'>knn_flo_final</span> <span class='op'>&lt;-</span> <span class='fu'>finalize_workflow</span><span class='op'>(</span><span class='va'>knn_flo</span>, <span class='va'>knn_best</span><span class='op'>)</span>
 
-registerDoSEQ() 
-knn_final_res &lt;- last_fit(
-  knn_flo_final,
-  split = d_split)
+<span class='fu'>registerDoSEQ</span><span class='op'>(</span><span class='op'>)</span> 
+<span class='va'>knn_final_res</span> <span class='op'>&lt;-</span> <span class='fu'>last_fit</span><span class='op'>(</span>
+  <span class='va'>knn_flo_final</span>,
+  split <span class='op'>=</span> <span class='va'>d_split</span><span class='op'>)</span>
 
-knn_final_res %&gt;%
-  collect_metrics()</code></pre>
+<span class='va'>knn_final_res</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>collect_metrics</span><span class='op'>(</span><span class='op'>)</span>
+</code></pre>
+</div>
 </div>
 <h5 id="since-we-ran-our-model-on-the-hpc-we-are-reading-in-our-model-first.">Since we ran our model on the HPC, we are reading in our model first.</h5>
 <div class="layout-chunk" data-layout="l-body">
 
 </div>
-<h6 id="our-final-performance-metric-rmse-for-our-knn-regression-model-is-92.20.-yikes-this-metric-is-not-so-great-but-our-total-elapsed-time-of-1772.517-seconds-on-a-cluster-computer-is-pretty-amazing.-the-high-rmse-may-be-due-to-our-leaving-in-the-defaults-for-dist_power-and-weight_func-when-tuning-our-model.-next-steps-if-time-allowed-would-include-tuning-just-the-weight_func-and-specifying-a-value-for-dist_power-based-on-the-manhattan-measure-since-most-of-our-predictors-are-categorical.">Our final performance metric (RMSE) for our KNN regression model is <code>92.20</code>. Yikes! This metric is not so great, but our total elapsed time of 1772.517 seconds on a cluster computer is pretty amazing. The high RMSE may be due to our leaving in the defaults for <code>dist_power()</code> and <code>weight_func</code> when tuning our model. Next steps, if time allowed, would include tuning just the <code>weight_func</code>, and specifying a value for <code>dist_power</code> based on the Manhattan measure (since most of our predictors are categorical).</h6>
+<h5 id="our-final-performance-metric-rmse-for-our-knn-regression-model-is-92.20.-yikes-this-metric-is-not-so-great-but-our-total-elapsed-time-of-1772.517-seconds-on-a-cluster-computer-is-pretty-amazing.-the-high-rmse-may-be-due-to-our-leaving-in-the-defaults-for-dist_power-and-weight_func-when-tuning-our-model.-next-steps-if-time-allowed-would-include-tuning-just-the-weight_func-and-specifying-a-value-for-dist_power-based-on-the-manhattan-measure-since-most-of-our-predictors-are-categorical.">Our final performance metric (RMSE) for our KNN regression model is <code>92.20</code>. Yikes! This metric is not so great, but our total elapsed time of 1772.517 seconds on a cluster computer is pretty amazing. The high RMSE may be due to our leaving in the defaults for <code>dist_power()</code> and <code>weight_func</code> when tuning our model. Next steps, if time allowed, would include tuning just the <code>weight_func</code>, and specifying a value for <code>dist_power</code> based on the Manhattan measure (since most of our predictors are categorical).</h5>
 <h1 id="model-3-lost-in-the-forest---random-forest-jp">Model 3: Lost in the Forest - Random Forest (JP)</h1>
-<p>Final parameters chosen (after tuning/selecting best) - mtry = 5, min_n = 40, trees = 1000</p>
-<p>13919.058 sec elapsed - from talapas</p>
-<h3 id="modified-recipe-to-increase-predictive-performance-jp">Modified recipe to increase predictive performance (JP)</h3>
-<h1 id="comparison">Comparison</h1>
-<ul>
-<li><p>Plot comparing performance metrics</p></li>
-<li><p>Explanation of best model</p></li>
-</ul>
+<p>Okay, so we’ve tested a elastic net regression and a KNN model. We’ve seen how simple to implement the elastic net regression was and we’ve experienced the waiting game of running a KNN model. <img src="https://media.giphy.com/media/9SIXFu7bIUYHhFc19G/giphy.gif" alt="well were waiting" /></p>
+<p>Let’s move on to our final model, a random forest model. Now, what is a random forest model? Random forest stems (ha!) from a decision tree but rather than have one tree, we will have 1000 trees.</p>
+<figure>
+<img src="https://media.giphy.com/media/RbDxrcG2deKnm/giphy.gif" alt="" /><figcaption>Charlie brown</figcaption>
+</figure>
+<p>Random forest is also different from bagged trees because while there are multiple trees, bagged trees aggregates the predictions across all trees and has the issue of correlations between the nodes for trees. So random forest reduces correlations between trees by making sure trees are different from one another by including randomness at each split in the tree. Random forest was also chosen over bagged trees because it is faster, although it might not feel like it based on our final plot. The two hyper-parameters that were tuned for our random forest model were the <code>mtry</code> and the <code>min_n</code> parameters. Mtry is important because it is the main parameter of dealing with tree correlation by making sure the predictors chosen for the root nodes are different each time rather than only picking a handful of predictors as the root node. Min_n is important because this parameter decides whether or not the node splits further to make deeper trees. While not tuned, the number of trees was set to 1000 rather than the default of 500. From this model, we will be able to see which nodes are the most important predictors for students’ scores. Lastly, model performance will be assessed by RMSE to compare to the other two models’ performance.</p>
+<p>When creating a random forest model, there are some additional arguments that are needed. First, it is important to use as many cores on your local computer as you can so you’re not waiting for forever while this model runs. The permutation argument is important for splitting and considers any variable important if it makes the predictive accuracy better and repeats it for each predictor.</p>
 <div class="layout-chunk" data-layout="l-body">
-<pre class="r"><code>
-#info extracted from rds files &amp; from talapas .Rout files (see lab 4 repo/files for final folder)
-#Regression model
-#1552.898 sec elapsed on talapas
-#RMSE = 89.02
+<div class="sourceCode">
+<pre><code><span class='op'>(</span><span class='va'>cores</span> <span class='op'>&lt;-</span> <span class='fu'>parallel</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/r/parallel/detectCores.html'>detectCores</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
 
-#KNN model
-#1772.517 sec elapsed on talapas
-#RMSE 92.2 
-
-#RF model
-#13919.058 sec elapsed on talapas
-#RMSE 85.8</code></pre>
+<span class='va'>model_of_forests</span> <span class='op'>&lt;-</span> <span class='fu'>rand_forest</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+<span class='fu'>set_engine</span><span class='op'>(</span><span class='st'>"ranger"</span>,
+num.threads <span class='op'>=</span> <span class='va'>cores</span>, <span class='co'>#</span>
+importance <span class='op'>=</span> <span class='st'>"permutation"</span>, 
+verbose <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
+<span class='fu'>set_mode</span><span class='op'>(</span><span class='st'>"regression"</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'>set_args</span><span class='op'>(</span>mtry <span class='op'>=</span> <span class='fu'>tune</span><span class='op'>(</span><span class='op'>)</span>,
+           trees <span class='op'>=</span> <span class='fl'>1000</span>,
+           min_n <span class='op'>=</span> <span class='fu'>tune</span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
+</code></pre>
 </div>
-<ul>
-<li>How to get predictions from test.csv</li>
-</ul>
+</div>
+<p>Next, we’ll update our existing workflow object to examine the random forest model in the previous code chunk. Now that we have our workflow created, we can then run the model and recipe to get the best RMSE value. We also set the grid to 10 to get 10 values of our hyper-parameters.</p>
 <div class="layout-chunk" data-layout="l-body">
-<pre class="r"><code>
-#import
-test &lt;- read_csv(&quot;data/test.csv&quot;,
-                 col_types = cols(.default = col_guess(), 
-                                  calc_admn_cd = col_character()))
+<div class="sourceCode">
+<pre><code><span class='va'>forest_flo</span> <span class='op'>&lt;-</span> <span class='va'>knn_flo</span> <span class='op'>%&gt;%</span>
+<span class='fu'>update_model</span><span class='op'>(</span><span class='va'>model_of_forests</span><span class='op'>)</span>
 
-#join
-test1 &lt;- test %&gt;% 
-  left_join(frl_stu) %&gt;% 
-  left_join(staff) %&gt;% 
-  left_join(ethnicities)</code></pre>
+<span class='fu'>tictoc</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/tictoc/man/tic.html'>tic</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>tune_random_trees</span> <span class='op'>&lt;-</span> <span class='fu'>tune_grid</span><span class='op'>(</span>
+    <span class='va'>forest_flo</span>,
+    resamples <span class='op'>=</span> <span class='va'>train_cv</span>,
+    grid <span class='op'>=</span> <span class='fl'>10</span>,
+    metrics <span class='op'>=</span> <span class='fu'>metric_set</span><span class='op'>(</span><span class='va'>rmse</span><span class='op'>)</span>,
+    control <span class='op'>=</span> <span class='fu'>control_resamples</span><span class='op'>(</span>verbose <span class='op'>=</span> <span class='cn'>TRUE</span>, 
+                               save_pred <span class='op'>=</span> <span class='cn'>TRUE</span>, 
+                               extract <span class='op'>=</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='va'>x</span><span class='op'>)</span><span class='op'>)</span> 
+<span class='fu'>tictoc</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/tictoc/man/tic.html'>toc</a></span><span class='op'>(</span><span class='op'>)</span>
+
+<span class='va'>train_best</span> <span class='op'>&lt;-</span> <span class='fu'>select_best</span><span class='op'>(</span><span class='va'>tune_random_trees</span>, metric <span class='op'>=</span> <span class='st'>"rmse"</span><span class='op'>)</span>
+</code></pre>
+</div>
+</div>
+<p>Now that we have the best values for our hyper-parameters and have our RMSE, we can then finalize our workflow and run the last_fit to see how the random forest performed.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre><code><span class='va'>train_wf_final</span> <span class='op'>&lt;-</span> <span class='fu'>finalize_workflow</span><span class='op'>(</span>
+  <span class='va'>forest_flo</span>,
+  <span class='va'>train_best</span>
+<span class='op'>)</span>
+
+<span class='fu'>tictoc</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/tictoc/man/tic.html'>tic</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>train_res_final</span> <span class='op'>&lt;-</span> <span class='fu'>last_fit</span><span class='op'>(</span><span class='va'>train_wf_final</span>,
+                            split <span class='op'>=</span> <span class='va'>d_split</span><span class='op'>)</span>
+<span class='fu'>tictoc</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/tictoc/man/tic.html'>toc</a></span><span class='op'>(</span><span class='op'>)</span>
+
+<span class='va'>train_res_final</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'>collect_metrics</span><span class='op'>(</span><span class='op'>)</span>
+</code></pre>
+</div>
+</div>
+<h2 id="model-fits">Model Fits</h2>
+<p>Now that we have examined all three different models using a small percentage of the actual data, we can discuss which model fits the data best. While it may be different for based on using a small percentage, if you happen to have a supercomputer, you can analyze the full dataset. In the following code chunk, we gathered information about the RMSE, which is the fit metric we are using, the amount of time it took to run the model with all the data, and the name of the model. We can see that the best fitting model is the random forest.</p>
+<figure>
+<img src="https://media.giphy.com/media/ndOEKTqUOEPq8/giphy.gif" alt="" /><figcaption>best tree</figcaption>
+</figure>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre><code><span class='va'>model_metrics</span> <span class='op'>&lt;-</span> <span class='fu'>tibble</span><span class='op'>(</span><span class='st'>'model'</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'Elastic Net Regression'</span>, <span class='st'>'KNN'</span>, <span class='st'>'Random Forest'</span><span class='op'>)</span>,
+                           <span class='st'>'time'</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1552.90</span>, <span class='fl'>1772.52</span>, <span class='fl'>13919.06</span><span class='op'>)</span>,
+                           <span class='st'>'rmse'</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>89.02</span>, <span class='fl'>92.20</span>, <span class='fl'>85.50</span><span class='op'>)</span><span class='op'>)</span>
+
+<span class='fu'>ggplot</span><span class='op'>(</span><span class='va'>model_metrics</span>, <span class='fu'>aes</span><span class='op'>(</span><span class='va'>time</span>, <span class='va'>rmse</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'>geom_line</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'>geom_point</span><span class='op'>(</span><span class='fu'>aes</span><span class='op'>(</span>color <span class='op'>=</span> <span class='va'>model</span><span class='op'>)</span>, size <span class='op'>=</span> <span class='fl'>2.5</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://rdrr.io/r/graphics/plot.window.html'>xlim</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>15000</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'>annotate</span><span class='op'>(</span><span class='st'>"text"</span>, x <span class='op'>=</span> <span class='fl'>1400</span>, y <span class='op'>=</span> <span class='fl'>88.55</span>, label <span class='op'>=</span> <span class='st'>"Elastic Net"</span>, size <span class='op'>=</span> <span class='fl'>5</span>, color <span class='op'>=</span> <span class='st'>'#12D7AD'</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'>annotate</span><span class='op'>(</span><span class='st'>"text"</span>, x <span class='op'>=</span> <span class='fl'>2800</span>, y <span class='op'>=</span> <span class='fl'>92.30</span>, label <span class='op'>=</span> <span class='st'>"KNN*"</span>, size <span class='op'>=</span> <span class='fl'>5</span>, color <span class='op'>=</span> <span class='st'>'#127AD7'</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'>annotate</span><span class='op'>(</span><span class='st'>"text"</span>, x <span class='op'>=</span> <span class='fl'>13500</span>, y <span class='op'>=</span> <span class='fl'>88.5</span>, label <span class='op'>=</span> <span class='st'>"Random Forest \n mtry = 5 \n min_n = 40 \n trees = 1000"</span>, size <span class='op'>=</span> <span class='fl'>5</span>, color <span class='op'>=</span> <span class='st'>'#D7126D'</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'>labs</span><span class='op'>(</span>title <span class='op'>=</span> <span class='st'>'Comparison of RMSE of three models fit'</span>,
+       subtitle <span class='op'>=</span> <span class='st'>'Testing dataset predictions'</span>,
+       y <span class='op'>=</span> <span class='st'>'RMSE'</span>,
+       caption <span class='op'>=</span> <span class='st'>"* = KNN model did not tune all hyperparameters due to computation time\n Computations were conducted on the UO's Talapas "</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'>theme_minimal</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'>theme</span><span class='op'>(</span>legend.position <span class='op'>=</span> <span class='st'>"none"</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'>scale_color_manual</span><span class='op'>(</span>values <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'#12D7AD'</span>, <span class='st'>'#127AD7'</span>, <span class='st'>'#D7126D'</span><span class='op'>)</span><span class='op'>)</span>
+</code></pre>
+</div>
+</div>
+<p>However, it is important to note that while the random forest model was the best performing model, it also took substantially longer to run. This was also a determining factor in how many parameters we could tune in the KNN model, as it was computationally exhausting to run. Overall, the random forest was enough of a better performing model that we think it was best to run that over a penalized regression model. While feature engineering changes could have probably resulted in a better fitting model for all three, this blog was to compare the models with the same recipe. So if you decide to fit these three models, some takeaways are:</p>
+<ol type="1">
+<li><p>Feature engineering is an important to step to get the most out of your models. It also helps if you have background information regarding the data you are working with.</p></li>
+<li><p>Think about the pros and cons of a better performing model and the time it takes to run the model.</p></li>
+<li><p>Experiment with other models not shown here.</p></li>
+<li><p>Try to find as much relevant data as possible to help in predicting your outcome of interest.</p></li>
+</ol>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre><code><span class='va'>test</span> <span class='op'>&lt;-</span> <span class='fu'>read_csv</span><span class='op'>(</span><span class='st'>"data/test.csv"</span>,
+                 col_types <span class='op'>=</span> <span class='fu'>cols</span><span class='op'>(</span>.default <span class='op'>=</span> <span class='fu'>col_guess</span><span class='op'>(</span><span class='op'>)</span>, 
+                                  calc_admn_cd <span class='op'>=</span> <span class='fu'>col_character</span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+
+<span class='co'>#joins - edited</span>
+<span class='va'>test1</span> <span class='op'>&lt;-</span> <span class='va'>test</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'>left_join</span><span class='op'>(</span><span class='va'>frl_stu</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'>left_join</span><span class='op'>(</span><span class='va'>staff</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'>left_join</span><span class='op'>(</span><span class='va'>ethnicities</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'>sample_frac</span><span class='op'>(</span><span class='fl'>.01</span><span class='op'>)</span>
+
+<span class='co'>#workflow</span>
+<span class='va'>fit_workflow</span> <span class='op'>&lt;-</span> <span class='fu'>fit</span><span class='op'>(</span><span class='va'>train_wf_final</span>, <span class='va'>d</span><span class='op'>)</span>
+
+<span class='co'>#use model to make predictions for test dataset</span>
+<span class='va'>preds_final</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/predict.html'>predict</a></span><span class='op'>(</span><span class='va'>fit_workflow</span>, <span class='va'>test1</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>d</span><span class='op'>)</span>
+
+<span class='va'>pred_frame</span> <span class='op'>&lt;-</span> <span class='fu'>tibble</span><span class='op'>(</span>Id <span class='op'>=</span> <span class='va'>test1</span><span class='op'>$</span><span class='va'>id</span>, Predicted <span class='op'>=</span> <span class='va'>preds_final</span><span class='op'>$</span><span class='va'>.pred</span><span class='op'>)</span>
+
+<span class='fu'>ggplot</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'>geom_point</span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>d</span>, <span class='fu'>aes</span><span class='op'>(</span><span class='va'>id</span>, <span class='va'>score</span><span class='op'>)</span>, color <span class='op'>=</span> <span class='st'>'#D7126D'</span>, alpha <span class='op'>=</span> <span class='fl'>.5</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'>geom_point</span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>pred_frame</span>, <span class='fu'>aes</span><span class='op'>(</span><span class='va'>Id</span>, <span class='va'>Predicted</span><span class='op'>)</span>, color <span class='op'>=</span> <span class='st'>'#12D7AD'</span>, alpha <span class='op'>=</span> <span class='fl'>.7</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'>theme_minimal</span><span class='op'>(</span><span class='op'>)</span>
+
+<span class='co'># write_csv(pred_frame, "fit2-final-st-editrecipe.csv") #edited</span>
+
+<span class='co'># saveRDS(train_res_final, "prelimfit2_finalfit-st-editrecipe.Rds")#added to save RDS object for final</span>
+</code></pre>
+</div>
 </div>
 <div class="layout-chunk" data-layout="l-body">
-<pre class="r"><code>
-#update with final chosen model (best fit)
-#If you want to use your model to predict the response for new observations, you need to use the fit() function on your workflow and the dataset that you want to fit the final model on (e.g. the complete training + testing dataset). 
+<div class="sourceCode">
+<pre><code><span class='co'>#update with final chosen model (best fit)</span>
+<span class='co'>#If you want to use your model to predict the response for new observations, you need to use the fit() function on your workflow and the dataset that you want to fit the final model on (e.g. the complete training + testing dataset). </span>
 
-#workflow
-fit_workflow &lt;- fit(FINALIZED_WORKFLOW_OBJECT_NAME, d)#Should this be d_train based on lab 3key. This blog says not - http://www.rebeccabarter.com/blog/2020-03-25_machine_learning/
+<span class='co'>#workflow</span>
+<span class='va'>fit_workflow</span> <span class='op'>&lt;-</span> <span class='fu'>fit</span><span class='op'>(</span><span class='va'>FINALIZED_WORKFLOW_OBJECT_NAME</span>, <span class='va'>d</span><span class='op'>)</span><span class='co'>#Should this be d_train based on lab 3key. This blog says not - http://www.rebeccabarter.com/blog/2020-03-25_machine_learning/</span>
 
-fit_workflow #view
+<span class='va'>fit_workflow</span> <span class='co'>#view</span>
 
-#use model to make predictions for test dataset (adding test1 as new data)
-preds_final &lt;- predict(fit_workflow, test1)
+<span class='co'>#use model to make predictions for test dataset (adding test1 as new data)</span>
+<span class='va'>preds_final</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/predict.html'>predict</a></span><span class='op'>(</span><span class='va'>fit_workflow</span>, <span class='va'>test1</span><span class='op'>)</span>
 
-######################
-pred_frame &lt;- tibble(Id = test1$id, Predicted = preds_final$.pred)
+<span class='co'>######################</span>
+<span class='va'>pred_frame</span> <span class='op'>&lt;-</span> <span class='fu'>tibble</span><span class='op'>(</span>Id <span class='op'>=</span> <span class='va'>test1</span><span class='op'>$</span><span class='va'>id</span>, Predicted <span class='op'>=</span> <span class='va'>preds_final</span><span class='op'>$</span><span class='va'>.pred</span><span class='op'>)</span>
 
-#write_csv(pred_frame, &quot;FILE-NAME.csv&quot;)</code></pre>
+<span class='co'>#write_csv(pred_frame, "FILE-NAME.csv")</span>
+</code></pre>
 </div>
+</div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>

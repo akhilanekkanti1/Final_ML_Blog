@@ -223,9 +223,8 @@ knn_mod <- nearest_neighbor()  %>%
 
 ```{r}
 
-knn_flo <- workflow() %>% 
-  add_recipe(rec_yoself) %>% 
-  add_model(knn_mod)
+knn_flo <- lr_flo %>% 
+  update_model(knn_mod)
 
 ```
 
@@ -295,52 +294,140 @@ knn_rds %>%
 ##### Our final performance metric (RMSE) for our KNN regression model is `92.20`. Yikes! This metric is not so great, but our total elapsed time of 1772.517 seconds on a cluster computer is pretty amazing. The high RMSE may be due to our leaving in the defaults for `dist_power()` and `weight_func` when tuning our model. Next steps, if time allowed, would include tuning just the `weight_func`, and specifying a value for `dist_power` based on the Manhattan measure (since most of our predictors are categorical).
 
 
-
 # Model 3: Lost in the Forest - Random Forest (JP)
 
-Final parameters chosen (after tuning/selecting best) - mtry = 5, min_n = 40, trees = 1000
+Okay, so we've tested a elastic net regression and a KNN model. We've seen how simple to implement the elastic net regression was and we've experienced the waiting game of running a KNN model. 
+![well were waiting](https://media.giphy.com/media/9SIXFu7bIUYHhFc19G/giphy.gif)
 
-13919.058 sec elapsed - from talapas
+Let's move on to our final model, a random forest model. Now, what is a random forest model? Random forest stems (ha!) from a decision tree but rather than have one tree, we will have 1000 trees. 
 
-### Modified recipe to increase predictive performance (JP)
+![Charlie brown](https://media.giphy.com/media/RbDxrcG2deKnm/giphy.gif)
 
-# Comparison
+Random forest is also different from bagged trees because while there are multiple trees, bagged trees aggregates the predictions across all trees and has the issue of correlations between the nodes for trees. So random forest reduces correlations between trees by making sure trees are different from one another by including randomness at each split in the tree. Random forest was also chosen over bagged trees because it is faster, although it might not feel like it based on our final plot. The two hyper-parameters that were tuned for our random forest model were the `mtry` and the `min_n` parameters. Mtry is important because it is the main parameter of dealing with tree correlation by making sure the predictors chosen for the root nodes are different each time rather than only picking a handful of predictors as the root node. Min_n is important because this parameter decides whether or not the node splits further to make deeper trees. While not tuned, the number of trees was set to 1000 rather than the default of 500. From this model, we will be able to see which nodes are the most important predictors for students' scores. Lastly, model performance will be assessed by RMSE to compare to the other two models' performance. 
 
-+ Plot comparing performance metrics
+When creating a random forest model, there are some additional arguments that are needed. First, it is important to use as many cores on your local computer as you can so you're not waiting for forever while this model runs. The permutation argument is important for splitting and considers any variable important if it makes the predictive accuracy better and repeats it for each predictor. 
 
-+ Explanation of best model
+```{r}
+(cores <- parallel::detectCores())
 
-```{r from-rds-files}
-#info extracted from rds files & from talapas .Rout files (see lab 4 repo/files for final folder)
-#Regression model
-#1552.898 sec elapsed on talapas
-#RMSE = 89.02
-
-#KNN model
-#1772.517 sec elapsed on talapas
-#RMSE 92.2 
-
-#RF model
-#13919.058 sec elapsed on talapas
-#RMSE 85.8
+model_of_forests <- rand_forest() %>%
+set_engine("ranger",
+num.threads = cores, #
+importance = "permutation", 
+verbose = TRUE) %>% 
+set_mode("regression") %>% 
+  set_args(mtry = tune(),
+           trees = 1000,
+           min_n = tune())
 ```
 
+Next, we'll update our existing workflow object to examine the random forest model in the previous code chunk. Now that we have our workflow created, we can then run the model and recipe to get the best RMSE value. We also set the grid to 10 to get 10 values of our hyper-parameters. 
 
-+ How to get predictions from test.csv 
+```{r}
+forest_flo <- knn_flo %>%
+update_model(model_of_forests)
 
-```{r predict-new-test-data}
-#import
+tictoc::tic()
+tune_random_trees <- tune_grid(
+    forest_flo,
+    resamples = train_cv,
+    grid = 10,
+    metrics = metric_set(rmse),
+    control = control_resamples(verbose = TRUE, 
+                               save_pred = TRUE, 
+                               extract = function(x) x)) 
+tictoc::toc()
+
+train_best <- select_best(tune_random_trees, metric = "rmse")
+```
+
+Now that we have the best values for our hyper-parameters and have our RMSE, we can then finalize our workflow and run the last_fit to see how the random forest performed. 
+
+```{r}
+train_wf_final <- finalize_workflow(
+  forest_flo,
+  train_best
+)
+
+tictoc::tic()
+train_res_final <- last_fit(train_wf_final,
+                            split = d_split)
+tictoc::toc()
+
+train_res_final %>% 
+  collect_metrics()
+
+```
+
+## Model Fits
+
+Now that we have examined all three different models using a small percentage of the actual data, we can discuss which model fits the data best. While it may be different for based on using a small percentage, if you happen to have a supercomputer, you can analyze the full dataset. In the following code chunk, we gathered information about the RMSE, which is the fit metric we are using, the amount of time it took to run the model with all the data, and the name of the model. We can see that the best fitting model is the random forest. 
+
+![best tree](https://media.giphy.com/media/ndOEKTqUOEPq8/giphy.gif)
+
+```{r}
+model_metrics <- tibble('model' = c('Elastic Net Regression', 'KNN', 'Random Forest'),
+                           'time' = c(1552.90, 1772.52, 13919.06),
+                           'rmse' = c(89.02, 92.20, 85.50))
+
+ggplot(model_metrics, aes(time, rmse)) +
+  geom_line() +
+  geom_point(aes(color = model), size = 2.5) +
+  xlim(0, 15000) +
+  annotate("text", x = 1400, y = 88.55, label = "Elastic Net", size = 5, color = '#12D7AD') +
+  annotate("text", x = 2800, y = 92.30, label = "KNN*", size = 5, color = '#127AD7') +
+  annotate("text", x = 13500, y = 88.5, label = "Random Forest \n mtry = 5 \n min_n = 40 \n trees = 1000", size = 5, color = '#D7126D') +
+  labs(title = 'Comparison of RMSE of three models fit',
+       subtitle = 'Testing dataset predictions',
+       y = 'RMSE',
+       caption = "* = KNN model did not tune all hyperparameters due to computation time\n Computations were conducted on the UO's Talapas ") +
+  theme_minimal() +
+  theme(legend.position = "none") +
+  scale_color_manual(values = c('#12D7AD', '#127AD7', '#D7126D'))
+```
+
+However, it is important to note that while the random forest model was the best performing model, it also took substantially longer to run. This was also a determining factor in how many parameters we could tune in the KNN model, as it was computationally exhausting to run. Overall, the random forest was enough of a better performing model that we think it was best to run that over a penalized regression model. While feature engineering changes could have probably resulted in a better fitting model for all three, this blog was to compare the models with the same recipe. So if you decide to fit these three models, some takeaways are: 
+
+1. Feature engineering is an important to step to get the most out of your models. It also helps if you have background information regarding the data you are working with.
+
+2. Think about the pros and cons of a better performing model and the time it takes to run the model. 
+
+3. Experiment with other models not shown here.
+
+4. Try to find as much relevant data as possible to help in predicting your outcome of interest.
+
+
+```{r}
 test <- read_csv("data/test.csv",
                  col_types = cols(.default = col_guess(), 
                                   calc_admn_cd = col_character()))
 
-#join
+#joins - edited
 test1 <- test %>% 
   left_join(frl_stu) %>% 
   left_join(staff) %>% 
-  left_join(ethnicities)
+  left_join(ethnicities) %>% 
+  sample_frac(.01)
 
+#workflow
+fit_workflow <- fit(train_wf_final, d)
+
+#use model to make predictions for test dataset
+preds_final <- predict(fit_workflow, test1)
+str(d)
+
+pred_frame <- tibble(Id = test1$id, Predicted = preds_final$.pred)
+
+ggplot() +
+  geom_point(data = d, aes(id, score), color = '#D7126D', alpha = .5) +
+  geom_point(data = pred_frame, aes(Id, Predicted), color = '#12D7AD', alpha = .7) +
+  theme_minimal()
+
+# write_csv(pred_frame, "fit2-final-st-editrecipe.csv") #edited
+
+# saveRDS(train_res_final, "prelimfit2_finalfit-st-editrecipe.Rds")#added to save RDS object for final
 ```
+
 
 ```{r predict-new-test-data-final-fit}
 #update with final chosen model (best fit)
